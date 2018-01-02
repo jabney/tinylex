@@ -1,7 +1,6 @@
 #
 # Darklord source
 #
-
 summon "messenger"
 
 forge harken(msg) {

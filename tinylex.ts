@@ -46,6 +46,9 @@ export class TinyLex {
     return _done
   }
 
+  /**
+   * Return a single lexer match or eof.
+   */
   lex(): Token {
     while(!this.done()) {
       const token = this._scan()
@@ -54,6 +57,9 @@ export class TinyLex {
     return ['EOF', 'EOF']
   }
 
+  /**
+   * Lexer scan method.
+   */
   private _scan(): Token {
     // Process input while there aren't any tokens and we
     // haven't reached the end.
@@ -93,6 +99,9 @@ export class TinyLex {
     return [...this]
   }
 
+  /**
+   * Javascript iterator method.
+   */
   next() {
     return {
       next: () => ({
@@ -101,8 +110,14 @@ export class TinyLex {
     }
   }
 
+  /**
+   * Javascript iterable protocol.
+   */
   [Symbol.iterator]() { return this.next() }
 
+  /**
+   * Iterate the ruleset and return a match if found.
+   */
   private _testRuleSet(chunk: string): RuleMatch {
     const len = this._rules.length
     // Process rules in order to find a match.
@@ -114,6 +129,9 @@ export class TinyLex {
     return [null, null]
   }
 
+  /**
+   * Handle a lexer match.
+   */
   private _handleMatches(rule: Rule, match: Match, chunk: string): boolean {
     const tokens = []
     const specifier = rule[1]
@@ -147,12 +165,18 @@ export class TinyLex {
     return tokens.length ? true : false
   }
 
+  /**
+   * Return the current line number based on the lexer progress.
+   */
   private _currentLine(): number {
     const lines = this._code.slice(0, this._start)
       .split('\n')
     return lines.length
   }
 
+  /**
+   * Clear member variable referneces.
+   */
   private _destroy(): void {
     this._code = null
     this._rules = null

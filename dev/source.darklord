@@ -5,7 +5,7 @@
 summon "messenger"
 
 forge harken(msg) {
-  messenger(msg)
+  messenger(msg || 'All shall flee before me!')
 }
 
 craft lieutenants = 12

@@ -1,7 +1,8 @@
 const TinyLex = require('../index')
 
 const KEYWORDS = [
-  'summon', 'forge', 'craft', 'wield', 'if', 'while', 'true', 'false', 'nil'
+  'summon', 'forge', 'craft', 'wield',
+  'if', 'while', 'true', 'false', 'null'
 ]
 
 const KEYWORD = new RegExp(`^(?:${KEYWORDS.join('|')})`)
@@ -31,7 +32,7 @@ const code = `
 summon "messenger"
 
 forge harken(msg) {
-  messenger(msg)
+  messenger(msg || 'All shall flee before me!')
 }
 
 craft lieutenants = 12
@@ -40,7 +41,7 @@ craft message: "I have " + leutenants + " servants"
 harken.wield(message)
 `
 
-const lexer = new TinyLex(code, rules, { throwOnMismatch: false })
+const lexer = new TinyLex(code, rules)
 
 for (let token of lexer) {
   console.log(token)

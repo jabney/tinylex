@@ -25,7 +25,7 @@ const code = `
 summon "messenger"
 
 forge harken(msg) {
-  messenger(msg)
+  messenger(msg || 'All shall flee before me!')
 }
 
 craft lieutenants = 12
@@ -39,7 +39,8 @@ Rules:
 
 ```javascript
 const KEYWORDS = [
-  'summon', 'forge', 'craft', 'wield', 'if', 'while', 'true', 'false', 'nil'
+  'summon', 'forge', 'craft', 'wield',
+  'if', 'while', 'true', 'false', 'null'
 ]
 
 const KEYWORD = new RegExp(`^(?:${KEYWORDS.join('|')})`)
@@ -100,39 +101,41 @@ lexer.tokenize()
 Result:
 
 ```
-[ 'COMMENT', '#' ]
-[ 'COMMENT', '# Darklord source' ]
-[ 'COMMENT', '#' ]
-[ 'SUMMON', 'summon' ]
-[ 'STRING', 'messenger' ]
-[ 'FORGE', 'forge' ]
-[ 'IDENTIFIER', 'harken' ]
-[ '(', '(' ]
-[ 'IDENTIFIER', 'msg' ]
-[ ')', ')' ]
-[ '{', '{' ]
-[ 'IDENTIFIER', 'messenger' ]
-[ '(', '(' ]
-[ 'IDENTIFIER', 'msg' ]
-[ ')', ')' ]
-[ '}', '}' ]
-[ 'CRAFT', 'craft' ]
-[ 'IDENTIFIER', 'lieutenants' ]
-[ '=', '=' ]
-[ 'NUMBER', '12' ]
-[ 'CRAFT', 'craft' ]
-[ 'IDENTIFIER', 'message' ]
-[ ':', ':' ]
-[ 'STRING', 'I have ' ]
-[ '+', '+' ]
-[ 'IDENTIFIER', 'leutenants' ]
-[ '+', '+' ]
-[ 'STRING', ' servants' ]
-[ 'IDENTIFIER', 'harken' ]
-[ '.', '.' ]
-[ 'WIELD', 'wield' ]
-[ '(', '(' ]
-[ 'IDENTIFIER', 'message' ]
-[ ')', ')' ]
-[ 'EOF', 'EOF' ]
+ [ 'COMMENT', '#' ]
+ [ 'COMMENT', '# Darklord source' ]
+ [ 'COMMENT', '#' ]
+ [ 'SUMMON', 'summon' ]
+ [ 'STRING', 'messenger' ]
+ [ 'FORGE', 'forge' ]
+ [ 'IDENTIFIER', 'harken' ]
+ [ '(', '(' ]
+ [ 'IDENTIFIER', 'msg' ]
+ [ ')', ')' ]
+ [ '{', '{' ]
+ [ 'IDENTIFIER', 'messenger' ]
+ [ '(', '(' ]
+ [ 'IDENTIFIER', 'msg' ]
+ [ '||', '||' ]
+ [ 'STRING', 'All shall flee before me!' ]
+ [ ')', ')' ]
+ [ '}', '}' ]
+ [ 'CRAFT', 'craft' ]
+ [ 'IDENTIFIER', 'lieutenants' ]
+ [ '=', '=' ]
+ [ 'NUMBER', '12' ]
+ [ 'CRAFT', 'craft' ]
+ [ 'IDENTIFIER', 'message' ]
+ [ ':', ':' ]
+ [ 'STRING', 'I have ' ]
+ [ '+', '+' ]
+ [ 'IDENTIFIER', 'leutenants' ]
+ [ '+', '+' ]
+ [ 'STRING', ' servants' ]
+ [ 'IDENTIFIER', 'harken' ]
+ [ '.', '.' ]
+ [ 'WIELD', 'wield' ]
+ [ '(', '(' ]
+ [ 'IDENTIFIER', 'message' ]
+ [ ')', ')' ]
+ [ 'EOF', 'EOF' ]
 ```

@@ -84,7 +84,7 @@ export class TinyLex {
             + ` "${chunk.replace(/\s+/g, ' ').slice(0, 32)}..."`)
         } else {
           const char = chunk.slice(0, 1)
-          this._tokens.push([char.toLocaleLowerCase(), char])
+          this._tokens.push([char.toLocaleUpperCase(), char])
           this._start += 1
         }
       }

@@ -138,9 +138,6 @@ var TinyLex = exports.TinyLex = function () {
             while (!this._tokens.length && this._start < this._code.length) {
                 var chunk = this._code.slice(this._start);
                 var len = this._rules.length;
-                if (this._tokens.length) {
-                    return this._tokens.pop();
-                }
 
                 var _testRuleSet2 = this._testRuleSet(chunk),
                     _testRuleSet3 = _slicedToArray(_testRuleSet2, 2),

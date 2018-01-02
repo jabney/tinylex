@@ -84,6 +84,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -122,42 +124,33 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: 'lex',
         value: function lex() {
-            if (this.done()) {
-                throw new Error('lexer consumed');
+            while (!this.done()) {
+                var token = this._scan();
+                if (token) {
+                    return token;
+                }
             }
-            if (this._tokens.length) {
-                return this._tokens.pop();
-            }
+            return ['EOF', 'EOF'];
+        }
+    }, {
+        key: '_scan',
+        value: function _scan() {
             while (!this._tokens.length && this._start < this._code.length) {
                 var chunk = this._code.slice(this._start);
                 var len = this._rules.length;
-                var rule = void 0,
-                    match = void 0;
-                for (var i = 0; i < len; i++) {
-                    rule = this._rules[i];
-                    match = rule[0].exec(chunk);
-                    if (match) {
-                        break;
-                    }
+                if (this._tokens.length) {
+                    return this._tokens.pop();
                 }
+
+                var _testRuleSet2 = this._testRuleSet(chunk),
+                    _testRuleSet3 = _slicedToArray(_testRuleSet2, 2),
+                    rule = _testRuleSet3[0],
+                    match = _testRuleSet3[1];
+
                 if (match) {
-                    var tokens = [];
-                    var specifier = rule[1];
-                    if (typeof specifier === 'string') {
-                        tokens.push([specifier, match[1] || match[0]]);
-                        this._start += match[0].length;
-                    } else if (typeof specifier === 'number') {
-                        var value = match[specifier];
-                        tokens.push([value.toLocaleUpperCase(), value]);
-                        this._start += match[0].length;
-                    } else if (typeof specifier === 'function') {
-                        var num = specifier(match, tokens, chunk);
-                        var size = match[0].length;
-                        this._start += typeof num === 'number' ? num || size : size;
-                    } else if (specifier == null) {
-                        this._start += match[0].length;
+                    if (!this._handleMatches(rule, match, chunk)) {
+                        return null;
                     }
-                    this._tokens = tokens.reverse();
                 } else {
                     if (this._options.throwOnMismatch) {
                         throw new Error('lex error:' + this._currentLine() + '\n  match not found for chunk:' + (' "' + chunk.replace(/\s+/g, ' ').slice(0, 32) + '..."'));
@@ -167,9 +160,9 @@ var TinyLex = exports.TinyLex = function () {
                         this._start += 1;
                     }
                 }
-                if (this._tokens.length) {
-                    return this._tokens.pop();
-                }
+            }
+            if (this._tokens.length) {
+                return this._tokens.pop();
             }
         }
     }, {
@@ -196,6 +189,42 @@ var TinyLex = exports.TinyLex = function () {
             return this.next();
         }
     }, {
+        key: '_testRuleSet',
+        value: function _testRuleSet(chunk) {
+            var len = this._rules.length;
+            for (var i = 0; i < len; i++) {
+                var rule = this._rules[i];
+                var match = rule[0].exec(chunk);
+                if (match) {
+                    return [rule, match];
+                }
+            }
+            return [null, null];
+        }
+    }, {
+        key: '_handleMatches',
+        value: function _handleMatches(rule, match, chunk) {
+            var tokens = [];
+            var specifier = rule[1];
+            if (typeof specifier === 'string') {
+                tokens.push([specifier, match[1] || match[0]]);
+                this._start += match[0].length;
+            } else if (typeof specifier === 'number') {
+                var value = match[specifier];
+                tokens.push([value.toLocaleUpperCase(), value]);
+                this._start += match[0].length;
+            } else if (typeof specifier === 'function') {
+                var num = specifier(match, tokens, chunk);
+                var size = match[0].length;
+                this._start += typeof num === 'number' ? num || size : size;
+            } else if (specifier == null) {
+                this._start += match[0].length;
+                return false;
+            }
+            this._tokens = this._tokens.concat(tokens.reverse());
+            return true;
+        }
+    }, {
         key: '_currentLine',
         value: function _currentLine() {
             var lines = this._code.slice(0, this._start).split('\n');
@@ -217,3 +246,4 @@ var TinyLex = exports.TinyLex = function () {
 /***/ })
 /******/ ]);
 });
+//# sourceMappingURL=tinylex.js.map

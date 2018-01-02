@@ -16,20 +16,23 @@ export declare class TinyLex {
     _tokens: Token[];
     constructor(code: string, rules: Ruleset, options?: Options);
     done(): boolean;
-    lex(): [string, string];
-    tokenize(): [string, string][];
+    lex(): string[];
+    private _scan();
+    tokenize(): string[][];
     next(): {
         next: () => {
             done: boolean;
-            value: [string, string];
+            value: string[];
         };
     };
     [Symbol.iterator](): {
         next: () => {
             done: boolean;
-            value: [string, string];
+            value: string[];
         };
     };
-    _currentLine(): number;
-    _destroy(): void;
+    private _testRuleSet(chunk);
+    private _handleMatches(rule, match, chunk);
+    private _currentLine();
+    private _destroy();
 }

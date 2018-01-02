@@ -45,57 +45,31 @@ export class TinyLex {
   }
 
   lex() {
-    if (this.done()) {
-      throw new Error('lexer consumed')
+    while(!this.done()) {
+      const token = this._scan()
+      if (token) { return token }
     }
+    return ['EOF', 'EOF']
+  }
 
-    if (this._tokens.length) {
-      return this._tokens.pop()
-    }
-
+  private _scan() {
     // Process input while there aren't any tokens and we
     // haven't reached the end.
     while(!this._tokens.length && this._start < this._code.length) {
       const chunk = this._code.slice(this._start)
       const len = this._rules.length
 
-      let rule, match
-      // Process rules in order to find a match.
-      for (let i = 0; i < len; i++) {
-        rule = this._rules[i]
-        match = rule[0].exec(chunk)
-        if (match) { break }
+      if (this._tokens.length) {
+        return this._tokens.pop()
       }
+
+      const [rule, match] = this._testRuleSet(chunk)
 
       if (match) {
-        const tokens = []
-        const specifier = rule[1]
-
-        if (typeof specifier === 'string') {
-          tokens.push([specifier, match[1] || match[0]])
-          this._start += match[0].length
+        if (!this._handleMatches(rule, match, chunk)) {
+          return null
         }
-
-        else if (typeof specifier === 'number') {
-          const value = match[specifier]
-          tokens.push([value.toLocaleUpperCase(), value])
-          this._start += match[0].length
-        }
-
-        else if (typeof specifier === 'function') {
-          const num = specifier(match, tokens, chunk)
-          const size = match[0].length
-          this._start += typeof num === 'number' ? (num || size) : size
-        }
-
-        else if (specifier == null) {
-          this._start += match[0].length
-        }
-        this._tokens = tokens.reverse()
-      }
-
-      // Match not found.
-      else {
+      } else {
         if (this._options.throwOnMismatch) {
           throw new Error(`lex error:${this._currentLine()}`
             + `\n  match not found for chunk:`
@@ -106,10 +80,10 @@ export class TinyLex {
           this._start += 1
         }
       }
+    }
 
-      if (this._tokens.length) {
-        return this._tokens.pop()
-      }
+    if (this._tokens.length) {
+      return this._tokens.pop()
     }
   }
 
@@ -127,13 +101,55 @@ export class TinyLex {
 
   [Symbol.iterator]() { return this.next() }
 
-  _currentLine() {
+  private _testRuleSet(chunk: string) {
+    const len = this._rules.length
+    // Process rules in order to find a match.
+    for (let i = 0; i < len; i++) {
+      const rule = this._rules[i]
+      const match = rule[0].exec(chunk)
+      if (match) { return [rule, match] }
+    }
+    return [null, null]
+  }
+
+  private _handleMatches(rule, match, chunk) {
+    const tokens = []
+    const specifier = rule[1]
+
+    if (typeof specifier === 'string') {
+      tokens.push([specifier, match[1] || match[0]])
+      this._start += match[0].length
+    }
+
+    else if (typeof specifier === 'number') {
+      const value = match[specifier]
+      tokens.push([value.toLocaleUpperCase(), value])
+      this._start += match[0].length
+    }
+
+    else if (typeof specifier === 'function') {
+      const num = specifier(match, tokens, chunk)
+      const size = match[0].length
+      this._start += typeof num === 'number' ? (num || size) : size
+    }
+
+    else if (specifier == null) {
+      this._start += match[0].length
+      return false
+    }
+
+    this._tokens = this._tokens.concat(tokens.reverse())
+
+    return true
+  }
+
+  private _currentLine() {
     const lines = this._code.slice(0, this._start)
       .split('\n')
     return lines.length
   }
 
-  _destroy() {
+  private _destroy() {
     this._code = null
     this._rules = null
     this._options = null

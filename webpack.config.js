@@ -25,6 +25,7 @@ module.exports = {
       }]
     }]
   },
+  devtool: 'sourcemap',
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
       test: /\.min\.js$/

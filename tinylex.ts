@@ -26,7 +26,7 @@ export class TinyLex {
   public _tokens: Token[]
 
   constructor(code: string, rules: Ruleset, options: Options = opts) {
-    if (!(Array.isArray(rules) && rules.length)) {
+    if (!(Array.isArray(rules))) {
       throw new Error(
         'Invalid ruleset: rules must be a non-zero length array')
     }

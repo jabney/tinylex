@@ -183,7 +183,6 @@ export class TinyLex {
   private _destroy(): void {
     this._code = null
     this._rules = null
-    this._options = null
     this._tokens = null
   }
 }

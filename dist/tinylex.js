@@ -113,7 +113,11 @@ var TinyLex = exports.TinyLex = function () {
     _createClass(TinyLex, [{
         key: 'done',
         value: function done() {
-            return !this._code || this._start >= this._code.length;
+            var _done = !this._code || this._start >= this._code.length;
+            if (_done) {
+                this._destroy();
+            }
+            return _done;
         }
     }, {
         key: 'lex',
@@ -196,6 +200,14 @@ var TinyLex = exports.TinyLex = function () {
         value: function _currentLine() {
             var lines = this._code.slice(0, this._start).split('\n');
             return lines.length;
+        }
+    }, {
+        key: '_destroy',
+        value: function _destroy() {
+            this._code = null;
+            this._rules = null;
+            this._options = null;
+            this._tokens = null;
         }
     }]);
 

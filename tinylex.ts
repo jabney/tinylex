@@ -39,7 +39,9 @@ export class TinyLex {
    * Return true if the lexer is consumed.
    */
   done() {
-    return !this._code || this._start >= this._code.length
+    const _done = !this._code || this._start >= this._code.length
+    if (_done) { this._destroy() }
+    return _done
   }
 
   lex() {
@@ -129,5 +131,12 @@ export class TinyLex {
     const lines = this._code.slice(0, this._start)
       .split('\n')
     return lines.length
+  }
+
+  _destroy() {
+    this._code = null
+    this._rules = null
+    this._options = null
+    this._tokens = null
   }
 }

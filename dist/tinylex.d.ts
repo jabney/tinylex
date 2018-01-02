@@ -31,4 +31,5 @@ export declare class TinyLex {
         };
     };
     _currentLine(): number;
+    _destroy(): void;
 }

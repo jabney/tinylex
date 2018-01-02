@@ -10,7 +10,7 @@ export interface Options {
 export declare class TinyLex {
     _code: string;
     _rules: Rule[];
-    _options: any;
+    _options: Options;
     _start: number;
     _tokens: Token[];
     constructor(code: string, rules: Ruleset, options?: Options);

@@ -17,7 +17,7 @@ const opts: Options = {
 export class TinyLex {
   public _code: string
   public _rules: Rule[]
-  public _options: any
+  public _options: Options
   public _start: number
   public _tokens: Token[]
 

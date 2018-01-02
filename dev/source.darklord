@@ -1,7 +1,7 @@
 summon "messenger"
 
-forge harken(m) {
-  messenger(m)
+forge harken(msg) {
+  messenger(msg)
 }
 
 craft lieutenants = 12

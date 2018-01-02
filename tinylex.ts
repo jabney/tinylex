@@ -63,10 +63,6 @@ export class TinyLex {
       const chunk = this._code.slice(this._start)
       const len = this._rules.length
 
-      if (this._tokens.length) {
-        return this._tokens.pop()
-      }
-
       const [rule, match] = this._testRuleSet(chunk)
 
       if (match) {

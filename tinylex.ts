@@ -119,7 +119,7 @@ export class TinyLex {
     const specifier = rule[1]
 
     if (typeof specifier === 'string') {
-      tokens.push([specifier, match[1] || match[0]])
+      tokens.push([specifier, match[1] != null ? match[1] : match[0]])
       this._start += match[0].length
     }
 

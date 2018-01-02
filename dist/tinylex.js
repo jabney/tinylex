@@ -207,7 +207,7 @@ var TinyLex = exports.TinyLex = function () {
             var tokens = [];
             var specifier = rule[1];
             if (typeof specifier === 'string') {
-                tokens.push([specifier, match[1] || match[0]]);
+                tokens.push([specifier, match[1] != null ? match[1] : match[0]]);
                 this._start += match[0].length;
             } else if (typeof specifier === 'number') {
                 var value = match[specifier];

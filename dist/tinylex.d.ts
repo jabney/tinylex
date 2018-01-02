@@ -5,12 +5,16 @@ export interface Rule {
     onRule?: (match: Match, tokens: Token[], chunk: string) => number;
 }
 export declare type Ruleset = Rule[];
+export interface Options {
+    throwOnMismatch: boolean;
+}
 export declare class TinyLex {
     _code: string;
     _rules: Rule[];
+    _options: any;
     _start: number;
     _tokens: Token[];
-    constructor(code: any, rules: any);
+    constructor(code: string, rules: Ruleset, options?: Options);
     done(): boolean;
     lex(): [string, string];
     tokenize(): [string, string][];

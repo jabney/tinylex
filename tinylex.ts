@@ -8,19 +8,29 @@ export interface Rule {
 
 export type Ruleset = Rule[]
 
+export interface Options {
+  throwOnMismatch: boolean
+}
+
+const opts: Options = {
+  throwOnMismatch: false
+}
+
 export class TinyLex {
   public _code: string
   public _rules: Rule[]
+  public _options: any
   public _start: number
   public _tokens: Token[]
 
-  constructor(code, rules) {
+  constructor(code: string, rules: Ruleset, options: Options = opts) {
     if (!(Array.isArray(rules) && rules.length)) {
       throw new Error(
         'Invalid ruleset: rules must be a non-zero length array')
     }
     this._code = code
     this._rules = rules
+    this._options = options
     this._start = 0
     this._tokens = []
   }
@@ -84,49 +94,19 @@ export class TinyLex {
 
       // Match not found.
       else {
-        // throw new Error('lex error: match not found for chunk:' + chunk.slice(0, 32))
-        const char = chunk.slice(0, 1)
-        this._tokens.push([char.toLocaleLowerCase(), char])
-        this._start += 1
+        if (this._options.throwOnMismatch) {
+          throw new Error('lex error: match not found for chunk:' + chunk.slice(0, 32))
+        } else {
+          const char = chunk.slice(0, 1)
+          this._tokens.push([char.toLocaleLowerCase(), char])
+          this._start += 1
+        }
       }
 
       if (this._tokens.length) {
         return this._tokens.pop()
       }
-
-      // let rule, match
-      // // Process rules in order to find a match.
-      // for (let i = 0; i < len; i++) {
-      //   rule = this._rules[i]
-      //   match = rule.regex.exec(chunk)
-      //   if (match) { break; }
-      // }
-
-      // if (match) {
-      //   const tokens = []
-      //   if (rule.onRule) {
-      //     const num = rule.onRule(match, tokens, chunk)
-      //     const size = match[0].length
-      //     this._start += typeof num === 'number' ? (num || size) : size
-      //   } else {
-      //     // const group = match[1]
-      //     // const text = group ? group : match[0]
-      //     // tokens.push([text.toLocaleUpperCase(), text])
-      //     this._start += match[0].length
-      //   }
-      //   this._tokens = tokens.reverse()
-      // } else {
-      //   const token = chunk.slice(0, 1)
-      //   this._tokens.push([token.toLocaleUpperCase(), token])
-      //   this._start += 1
-      // }
     }
-
-    // if (this._tokens.length) {
-    //   return this._tokens.pop()
-    // }
-
-    // throw new Error('token queue underflow')
   }
 
   tokenize() {

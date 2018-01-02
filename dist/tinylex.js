@@ -90,8 +90,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var opts = {
+    throwOnMismatch: false
+};
+
 var TinyLex = exports.TinyLex = function () {
     function TinyLex(code, rules) {
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : opts;
+
         _classCallCheck(this, TinyLex);
 
         if (!(Array.isArray(rules) && rules.length)) {
@@ -99,6 +105,7 @@ var TinyLex = exports.TinyLex = function () {
         }
         this._code = code;
         this._rules = rules;
+        this._options = options;
         this._start = 0;
         this._tokens = [];
     }
@@ -148,9 +155,13 @@ var TinyLex = exports.TinyLex = function () {
                     }
                     this._tokens = tokens.reverse();
                 } else {
-                    var char = chunk.slice(0, 1);
-                    this._tokens.push([char.toLocaleLowerCase(), char]);
-                    this._start += 1;
+                    if (this._options.throwOnMismatch) {
+                        throw new Error('lex error: match not found for chunk:' + chunk.slice(0, 32));
+                    } else {
+                        var char = chunk.slice(0, 1);
+                        this._tokens.push([char.toLocaleLowerCase(), char]);
+                        this._start += 1;
+                    }
                 }
                 if (this._tokens.length) {
                     return this._tokens.pop();

@@ -15,7 +15,11 @@
   },
   "keywords": [
     "lex",
-    "lexer"
+    "lexer",
+    "lexical",
+    "lexeme",
+    "tokenize",
+    "tokenization"
   ],
   "author": "James Abney",
   "license": "MIT",

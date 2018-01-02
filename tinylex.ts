@@ -1,11 +1,7 @@
 export type Match = RegExpExecArray
 export type Token = [string, string]
-
-export interface Rule {
-  regex: RegExp,
-  onRule?: (match: Match, tokens: Token[], chunk: string) => number
-}
-
+export type RuleFn = (match, tokens, chunk: string) => number|void
+export type Rule = [RegExp, string|number|RuleFn]|[RegExp]
 export type RuleMatch = [Rule, Match]
 
 export type Ruleset = Rule[]

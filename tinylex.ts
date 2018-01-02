@@ -6,6 +6,8 @@ export interface Rule {
   onRule?: (match: Match, tokens: Token[], chunk: string) => number
 }
 
+export type RuleMatch = [Rule, Match]
+
 export type Ruleset = Rule[]
 
 export interface Options {
@@ -38,13 +40,13 @@ export class TinyLex {
   /**
    * Return true if the lexer is consumed.
    */
-  done() {
+  done(): boolean {
     const _done = !this._code || this._start >= this._code.length
     if (_done) { this._destroy() }
     return _done
   }
 
-  lex() {
+  lex(): Token {
     while(!this.done()) {
       const token = this._scan()
       if (token) { return token }
@@ -52,7 +54,7 @@ export class TinyLex {
     return ['EOF', 'EOF']
   }
 
-  private _scan() {
+  private _scan(): Token {
     // Process input while there aren't any tokens and we
     // haven't reached the end.
     while(!this._tokens.length && this._start < this._code.length) {
@@ -87,7 +89,7 @@ export class TinyLex {
     }
   }
 
-  tokenize() {
+  tokenize(): Token[] {
     return [...this]
   }
 
@@ -101,7 +103,7 @@ export class TinyLex {
 
   [Symbol.iterator]() { return this.next() }
 
-  private _testRuleSet(chunk: string) {
+  private _testRuleSet(chunk: string): RuleMatch {
     const len = this._rules.length
     // Process rules in order to find a match.
     for (let i = 0; i < len; i++) {
@@ -112,7 +114,7 @@ export class TinyLex {
     return [null, null]
   }
 
-  private _handleMatches(rule, match, chunk) {
+  private _handleMatches(rule: Rule, match: Match, chunk: string): boolean {
     const tokens = []
     const specifier = rule[1]
 
@@ -143,13 +145,13 @@ export class TinyLex {
     return true
   }
 
-  private _currentLine() {
+  private _currentLine(): number {
     const lines = this._code.slice(0, this._start)
       .split('\n')
     return lines.length
   }
 
-  private _destroy() {
+  private _destroy(): void {
     this._code = null
     this._rules = null
     this._options = null

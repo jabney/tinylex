@@ -137,12 +137,14 @@ export class TinyLex {
 
     else if (specifier == null) {
       this._start += match[0].length
+      // A token was not added.
       return false
     }
 
     this._tokens = this._tokens.concat(tokens.reverse())
 
-    return true
+    // A token may have been added.
+    return tokens.length ? true : false
   }
 
   private _currentLine(): number {

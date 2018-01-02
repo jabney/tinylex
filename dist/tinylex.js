@@ -222,7 +222,7 @@ var TinyLex = exports.TinyLex = function () {
                 return false;
             }
             this._tokens = this._tokens.concat(tokens.reverse());
-            return true;
+            return tokens.length ? true : false;
         }
     }, {
         key: '_currentLine',

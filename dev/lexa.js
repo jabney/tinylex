@@ -157,7 +157,7 @@ function lexa(code) {
   //   }
   // }]
 
-  const lexer = new TinyLex(code, rules)
+  const lexer = new TinyLex(code, rules, { throwOnMismatch: false })
 
   return lexer
 }

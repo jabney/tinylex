@@ -181,8 +181,6 @@ export class TinyLex {
    * Clear member variable referneces.
    */
   private _destroy(): void {
-    this._code = null
-    this._rules = null
-    this._tokens = null
+    this._code = this._rules = this._tokens = null
   }
 }

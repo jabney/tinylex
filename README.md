@@ -100,7 +100,7 @@ lexer.tokenize()
 
 Result:
 
-```
+```javascript
  [ 'COMMENT', '#' ]
  [ 'COMMENT', '# Darklord source' ]
  [ 'COMMENT', '#' ]

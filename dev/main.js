@@ -1,11 +1,11 @@
 const fs = require('fs')
-const lexa = require('./lexa')
+const lexd = require('./lexd')
 
 const path = process.argv[2]
 
 const source = fs.readFile(path, (err, buffer) => {
   if (err) { return console.log(err) }
-  const lexer = lexa(buffer.toString())
+  const lexer = lexd(buffer.toString())
   const tokens = lexer.tokenize()
   print(tokens)
   // console.log(tokens)

@@ -1,0 +1,43 @@
+{
+  "name": "tinylex",
+  "version": "0.1.0",
+  "description": "A simple iterative lexer written in TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack --watch",
+    "dev": "npm run build && node dev/main dev/source.a",
+    "build": "webpack",
+    "test": "npm run build && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jabney/tinylex.git"
+  },
+  "keywords": [
+    "lex",
+    "lexer"
+  ],
+  "author": "James Abney",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jabney/tinylex/issues"
+  },
+  "homepage": "https://github.com/jabney/tinylex#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "mocha": "^4.1.0",
+    "nodemon": "^1.14.7",
+    "ts-loader": "^3.2.0",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
+  },
+  "files": [
+    "index.js",
+    "tinylex.ts",
+    "dist/",
+    "spec"
+  ]
+}

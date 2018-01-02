@@ -1,0 +1,20 @@
+# let n = 2
+# def something:
+#   if (true):
+#     lala && true
+#   if (false):
+#     lala || false
+
+# MyConstant = "constant"
+# print 'The End'
+# true && false
+
+if 1:
+  if 2:
+    print('...')
+    if false:
+      pass
+    print('done!')
+  2
+
+print "The End"

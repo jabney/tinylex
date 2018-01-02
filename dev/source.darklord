@@ -1,0 +1,10 @@
+summon "messenger"
+
+forge harken(m) {
+  messenger(m)
+}
+
+craft lieutenants = 12
+craft message: "I have " + leutenants + " servants"
+
+harken.wield(message)

@@ -156,7 +156,7 @@ var TinyLex = exports.TinyLex = function () {
                     this._tokens = tokens.reverse();
                 } else {
                     if (this._options.throwOnMismatch) {
-                        throw new Error('lex error: match not found for chunk:' + chunk.slice(0, 32));
+                        throw new Error('lex error:' + this._currentLine() + '\n  match not found for chunk:' + (' "' + chunk.replace(/\s+/g, ' ').slice(0, 32) + '..."'));
                     } else {
                         var char = chunk.slice(0, 1);
                         this._tokens.push([char.toLocaleLowerCase(), char]);
@@ -194,8 +194,8 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: '_currentLine',
         value: function _currentLine() {
-            var stripped = this._code.replace(/\n/g, '');
-            return this._code.length - stripped.length + 1;
+            var lines = this._code.slice(0, this._start).split('\n');
+            return lines.length;
         }
     }]);
 

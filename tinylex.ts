@@ -95,6 +95,9 @@ export class TinyLex {
     }
   }
 
+  /**
+   * Consume the lexer and return a list of its tokens.
+   */
   tokenize(): Token[] {
     return [...this]
   }

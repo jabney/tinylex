@@ -102,7 +102,7 @@ var TinyLex = exports.TinyLex = function () {
 
         _classCallCheck(this, TinyLex);
 
-        if (!(Array.isArray(rules) && rules.length)) {
+        if (!Array.isArray(rules)) {
             throw new Error('Invalid ruleset: rules must be a non-zero length array');
         }
         this._code = code;
@@ -156,7 +156,7 @@ var TinyLex = exports.TinyLex = function () {
                         throw new Error('lex error:' + this._currentLine() + '\n  match not found for chunk:' + (' "' + chunk.replace(/\s+/g, ' ').slice(0, 32) + '..."'));
                     } else {
                         var char = chunk.slice(0, 1);
-                        this._tokens.push([char.toLocaleLowerCase(), char]);
+                        this._tokens.push([char.toLocaleUpperCase(), char]);
                         this._start += 1;
                     }
                 }
@@ -233,10 +233,7 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: '_destroy',
         value: function _destroy() {
-            this._code = null;
-            this._rules = null;
-            this._options = null;
-            this._tokens = null;
+            this._code = this._rules = this._tokens = null;
         }
     }]);
 

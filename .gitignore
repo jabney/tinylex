@@ -1,3 +1,9 @@
+# System
+.DS_Store/
+
+# VS Compiled
+.vscode/
+
 # Logs
 logs
 *.log

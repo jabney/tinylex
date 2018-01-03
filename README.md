@@ -53,13 +53,13 @@ const LOGICAL = /^(?:\|\||&&|==|!=|<=|>=)/
 const WHITESPACE = /^\s/
 
 const rules = [
-  [COMMENT, 'COMMENT'],       // ['COMMENT', 'Darklord source']
-  [KEYWORD, 0],               // ['SUMMON', 'summon']
-  [IDENTIFIER, 'IDENTIFIER'], // ['IDENTIFIER', 'harken']
-  [NUMBER, 'NUMBER'],         // ['NUMBER', '12']
-  [LOGICAL, 0],               // ['||', '||']
-  [STRING_DOUBLE, 'STRING'],  // ['STRING', 'messenger']
-  [STRING_SINGLE, 'STRING'],  // ['STRING', 'All shall flee...']
+  [COMMENT, 'COMMENT'],
+  [KEYWORD, 0],
+  [IDENTIFIER, 'IDENTIFIER'],
+  [NUMBER, 'NUMBER'],
+  [LOGICAL, 0],
+  [STRING_DOUBLE, 'STRING'],
+  [STRING_SINGLE, 'STRING'],
   [WHITESPACE]
 ]
 ```
@@ -144,6 +144,19 @@ Result:
 ```
 
 ## Rules
+
+```javascript
+const rules = [
+  [COMMENT, 'COMMENT'],       // ['COMMENT', 'Darklord source']
+  [KEYWORD, 0],               // ['SUMMON', 'summon']
+  [IDENTIFIER, 'IDENTIFIER'], // ['IDENTIFIER', 'harken']
+  [NUMBER, 'NUMBER'],         // ['NUMBER', '12']
+  [LOGICAL, 0],               // ['||', '||']
+  [STRING_DOUBLE, 'STRING'],  // ['STRING', 'messenger']
+  [STRING_SINGLE, 'STRING'],  // ['STRING', 'All shall flee...']
+  [WHITESPACE]
+]
+```
 
 Rules can be specified in the form `[RegExp, string|number|function|null|undefined]`
 

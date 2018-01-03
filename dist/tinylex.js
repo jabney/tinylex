@@ -117,6 +117,7 @@ var TinyLex = exports.TinyLex = function () {
         key: 'onToken',
         value: function onToken(fn) {
             this._onToken = fn;
+            return this;
         }
     }, {
         key: 'done',
@@ -140,6 +141,11 @@ var TinyLex = exports.TinyLex = function () {
             var eofToken = ['EOF', 'EOF'];
             this._onToken(eofToken);
             return eofToken;
+        }
+    }, {
+        key: 'tokenize',
+        value: function tokenize() {
+            return [].concat(_toConsumableArray(this));
         }
     }, {
         key: '_scan',
@@ -170,11 +176,6 @@ var TinyLex = exports.TinyLex = function () {
             if (this._tokens.length) {
                 return this._tokens.pop();
             }
-        }
-    }, {
-        key: 'tokenize',
-        value: function tokenize() {
-            return [].concat(_toConsumableArray(this));
         }
     }, {
         key: 'next',

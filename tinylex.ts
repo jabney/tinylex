@@ -35,8 +35,9 @@ export class TinyLex {
     this._onToken = () => {}
   }
 
-  onToken(fn: OnToken) {
+  onToken(fn: OnToken): this {
     this._onToken = fn
+    return this
   }
 
   /**

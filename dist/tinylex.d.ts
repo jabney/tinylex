@@ -16,11 +16,11 @@ export declare class TinyLex {
     private _tokens;
     private _onToken;
     constructor(code: string, rules: Ruleset, options?: Options);
-    onToken(fn: OnToken): void;
+    onToken(fn: OnToken): this;
     done(): boolean;
     lex(): Token;
-    private _scan();
     tokenize(): Token[];
+    private _scan();
     next(): {
         next: () => {
             done: boolean;

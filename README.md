@@ -149,13 +149,13 @@ Rules can be specified in the form `[RegExp, string|number|function|null|undefin
 
 `RegExp`: the match criteria specified as a regular expression object.
 
-`string`: the name of the token, e.g., `'COMMENT'` as in `[COMMENT, 'COMMENT']`. The token content is taken from match group `0` of the RegExp match object which produces the token `['COMMENT', '# Darklord source']`.
+`string`: the name of the token, e.g., `'COMMENT'` as in `[COMMENT, 'COMMENT']`. The token content is taken from match group `0` (the lexeme) of the RegExp match object which produces the token `['COMMENT', '# Darklord source']`.
 
 `number`: the number of the match group to use for both the token name and content, as in `[KEYWORD, 0]` which produces the token `['SUMMON', 'summon']`.
 
-`null|undefined`: no token should be created from the match; effectively discards the match altogether, as in `[WHITESPACE]` which swallows whitespace with no other effect.
+`null|undefined`: no token should be created from the match - effectively discards the match altogether, as in `[WHITESPACE]` which swallows whitespace with no other effect.
 
-`function`: a function used to create the token, discard the match, and/or advance the cursor by some positive, non-zero integer amount (`TinyLex` insists on advancing the cursor to avoid infinite loops).
+`function`: a function used to create the token, discard the match, and/or advance the cursor by some positive, non-zero integer amount (`TinyLex` advances the cursor to avoid infinite loops). Functions here can also push multiple tokens if desired.
 
 ```javascript
 // We could use a function to swallow whitespace.
@@ -169,17 +169,34 @@ Rules can be specified in the form `[RegExp, string|number|function|null|undefin
 ```
 
 ```javascript
-  // We could use a function customize the token in some way.
-  [LOGICAL, function (match, tokens, chunk) {
-    const lexeme = match[0]
-    switch (lexeme) {
-      case '&&': tokens.push(['OPERATOR', '&&']); break
-      case '||': tokens.push(['OPERATOR', '||']); break
-      default: tokens.push([lexeme, lexeme])
-    }
+// We could use a function customize the token in some way.
+[LOGICAL, function (match, tokens, chunk) {
+  const lexeme = match[0]
+  switch (lexeme) {
+    case '&&': tokens.push(['OPERATOR', '&&']); break
+    case '||': tokens.push(['OPERATOR', '||']); break
+    default: tokens.push([lexeme, lexeme])
+  }
 
-    // We don't actually need to do this because by default the
-    // cursor is advanced by the lexeme length (match group 0).
-    return lexeme.length
-  }]
+  // We don't actually need to do this because by default the
+  // cursor is advanced by the lexeme length (match group 0).
+  return lexeme.length
+}]
+```
+
+## The `onToken` Function
+
+This function is called for every token. It can modify the contents of the token, return an entirely new token, or discard some or all tokens excepting the final `EOF` token. `onToken` can be utilized by calling `lexer.onToken` and passing a function definition. This function is called with its 'this' context set to the lexer instance.
+
+```javascript
+const lexer = new TinyLex(code, rules)
+
+// The callback function will have it's 'this' context set
+// to the lexer instance.
+lexer.onToken(function (token, match) {
+  // We can return a new token, the original token, a modified
+  // version of the given token, or nothing at all - in which case
+  // the token will be discarded except for the EOF token.
+  return token
+})
 ```

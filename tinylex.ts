@@ -65,6 +65,13 @@ export class TinyLex {
   }
 
   /**
+   * Consume the lexer and return a list of its tokens.
+   */
+  tokenize(): Token[] {
+    return [...this]
+  }
+
+  /**
    * Lexer scan method.
    */
   private _scan(): Token {
@@ -96,13 +103,6 @@ export class TinyLex {
     if (this._tokens.length) {
       return this._tokens.pop()
     }
-  }
-
-  /**
-   * Consume the lexer and return a list of its tokens.
-   */
-  tokenize(): Token[] {
-    return [...this]
   }
 
   /**

@@ -173,6 +173,9 @@ export class TinyLex {
     return tokens.length ? true : false
   }
 
+  /**
+   * Handle a lex error (no rule found).
+   */
   private _handleError(chunk: string) {
     switch(this._errorAction) {
       case 'throw': throw new Error(this._getErrorStr(chunk))
@@ -181,12 +184,18 @@ export class TinyLex {
     }
   }
 
+  /**
+   * Tokenize the next single character in the current chunk.
+   */
   private _tokenizeChar(chunk: string): void {
     const char = chunk.slice(0, 1)
     this._tokens.push([char.toLocaleUpperCase(), char])
     this._start += 1
   }
 
+  /**
+   * Get a lex error message.
+   */
   private _getErrorStr(chunk: string): string {
     return `lex error:${this._lineAndCol()}`
     + `\n  match not found for chunk:`

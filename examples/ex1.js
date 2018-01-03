@@ -45,7 +45,6 @@ const lexer = new TinyLex(code, rules)
 
 lexer.onToken((token, match) => {
   // Intercept and modify tokens here or return a new one.
-  // The EOF token cannot be modified and its match will be null.
   // if (token[0] === 'CRAFT') {
   //   return ['CRAFTY', 'crafty']
   // }

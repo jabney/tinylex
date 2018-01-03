@@ -114,6 +114,11 @@ var TinyLex = exports.TinyLex = function () {
     }
 
     _createClass(TinyLex, [{
+        key: 'onToken',
+        value: function onToken(fn) {
+            this._onToken = fn;
+        }
+    }, {
         key: 'done',
         value: function done() {
             var _done = !this._code || this._start >= this._code.length;
@@ -235,11 +240,6 @@ var TinyLex = exports.TinyLex = function () {
         key: '_destroy',
         value: function _destroy() {
             this._code = this._rules = this._tokens = null;
-        }
-    }, {
-        key: 'onToken',
-        set: function set(fn) {
-            this._onToken = fn;
         }
     }]);
 

@@ -43,9 +43,9 @@ harken.wield(message)
 
 const lexer = new TinyLex(code, rules)
 
-lexer.onToken = (token) => {
+lexer.onToken((token) => {
   console.log('token:', token)
-}
+})
 
 for (let token of lexer) {
   console.log(token)

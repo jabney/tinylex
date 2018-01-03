@@ -16,7 +16,7 @@ export declare class TinyLex {
     private _tokens;
     private _onToken;
     constructor(code: string, rules: Ruleset, options?: Options);
-    onToken: OnToken;
+    onToken(fn: OnToken): void;
     done(): boolean;
     lex(): Token;
     private _scan();

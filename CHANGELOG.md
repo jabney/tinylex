@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2018-01-03
+- Change onToken function behavior so that if it doesn't return a token no token is returned from lex.
+
 ## [0.5.0] - 2018-01-03
 - Change error options to multiple choice (throw, tokenize, ignore).
 - Restructure error handling code.

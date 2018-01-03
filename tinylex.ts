@@ -1,6 +1,6 @@
 export type Match = RegExpExecArray
 export type Token = [string, string]
-export type RuleFn = (match, tokens, chunk: string) => number|void
+export type RuleFn = (match: Match, tokens: Token[], chunk: string) => number|void
 export type Rule = [RegExp, string|number|RuleFn]|[RegExp]
 export type RuleMatch = [Rule, Match]
 export type Ruleset = Rule[]

@@ -1,6 +1,6 @@
 export declare type Match = RegExpExecArray;
 export declare type Token = [string, string];
-export declare type RuleFn = (match, tokens, chunk: string) => number | void;
+export declare type RuleFn = (match: Match, tokens: Token[], chunk: string) => number | void;
 export declare type Rule = [RegExp, string | number | RuleFn] | [RegExp];
 export declare type RuleMatch = [Rule, Match];
 export declare type Ruleset = Rule[];

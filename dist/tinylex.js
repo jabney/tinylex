@@ -241,6 +241,7 @@ var TinyLex = exports.TinyLex = function () {
         key: '_destroy',
         value: function _destroy() {
             this._code = this._rules = this._tokens = null;
+            this._onToken = null;
         }
     }]);
 

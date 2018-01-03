@@ -5,13 +5,14 @@ export type Rule = [RegExp, string|number|RuleFn]|[RegExp]
 export type RuleMatch = [Rule, Match]
 export type Ruleset = Rule[]
 export type OnToken = (token: Token, match: Match) => Token|string
+export type ErrorAction = 'throw'|'tokenize'|'ignore'
 
 export interface Options {
-  throwOnMismatch: boolean
+  onError: ErrorAction
 }
 
 const opts: Options = {
-  throwOnMismatch: false
+  onError: 'tokenize'
 }
 
 export class TinyLex {
@@ -22,6 +23,7 @@ export class TinyLex {
   private _tokens: Token[]
   private _onToken: OnToken
   private _lastMatch: Match
+  private _errorAction: ErrorAction
 
   constructor(code: string, rules: Ruleset, options: Options = opts) {
     if (!(Array.isArray(rules))) {
@@ -30,10 +32,10 @@ export class TinyLex {
     }
     this._code = code
     this._rules = rules
-    this._options = options
     this._start = 0
     this._tokens = []
     this._onToken = () => { return null }
+    this._errorAction = options.onError
   }
 
   onToken(fn: OnToken): this {
@@ -53,7 +55,7 @@ export class TinyLex {
    */
   lex(): Token|string {
     if (this.done()) {
-      throw new Error('lexer is exhausted')
+      throw new Error('lexer is consumed')
     }
 
     while(!this.done()) {
@@ -91,19 +93,11 @@ export class TinyLex {
 
       if (match) {
         this._lastMatch = match
-        if (!this._handleMatches(rule, match, chunk)) {
+        if (!this._handleMatch(rule, match, chunk)) {
           return null
         }
       } else {
-        if (this._options.throwOnMismatch) {
-          throw new Error(`lex error:${this._currentLine()}`
-            + `\n  match not found for chunk:`
-            + ` "${chunk.replace(/\s+/g, ' ').slice(0, 32)}..."`)
-        } else {
-          const char = chunk.slice(0, 1)
-          this._tokens.push([char.toLocaleUpperCase(), char])
-          this._start += 1
-        }
+        this._handleError(chunk)
       }
     }
 
@@ -145,7 +139,7 @@ export class TinyLex {
   /**
    * Handle a lexer match.
    */
-  private _handleMatches(rule: Rule, match: Match, chunk: string): boolean {
+  private _handleMatch(rule: Rule, match: Match, chunk: string): boolean {
     const tokens = []
     const specifier = rule[1]
 
@@ -179,13 +173,33 @@ export class TinyLex {
     return tokens.length ? true : false
   }
 
+  private _handleError(chunk: string) {
+    switch(this._errorAction) {
+      case 'throw': throw new Error(this._getErrorStr(chunk))
+      case 'tokenize': this._tokenizeChar(chunk); break
+      default: this._start += 1; break
+    }
+  }
+
+  private _tokenizeChar(chunk: string): void {
+    const char = chunk.slice(0, 1)
+    this._tokens.push([char.toLocaleUpperCase(), char])
+    this._start += 1
+  }
+
+  private _getErrorStr(chunk: string): string {
+    return `lex error:${this._lineAndCol()}`
+    + `\n  match not found for chunk:`
+    + ` "${chunk.replace(/\s+/g, ' ').slice(0, 32)}..."`
+  }
+
   /**
-   * Return the current line number based on the lexer progress.
+   * Return the current line and column based on the lexer progress.
    */
-  private _currentLine(): number {
-    const lines = this._code.slice(0, this._start)
-      .split('\n')
-    return lines.length
+  private _lineAndCol(): string {
+    const lines = this._code.slice(0, this._start).split('\n')
+    const col = lines[lines.length - 1].length + 1
+    return `${lines.length}:${col}`
   }
 
   /**

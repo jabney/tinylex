@@ -5,8 +5,9 @@ export declare type Rule = [RegExp, string | number | RuleFn] | [RegExp];
 export declare type RuleMatch = [Rule, Match];
 export declare type Ruleset = Rule[];
 export declare type OnToken = (token: Token, match: Match) => Token | string;
+export declare type ErrorAction = 'throw' | 'tokenize' | 'ignore';
 export interface Options {
-    throwOnMismatch: boolean;
+    onError: ErrorAction;
 }
 export declare class TinyLex {
     private _code;
@@ -16,6 +17,7 @@ export declare class TinyLex {
     private _tokens;
     private _onToken;
     private _lastMatch;
+    private _errorAction;
     constructor(code: string, rules: Ruleset, options?: Options);
     onToken(fn: OnToken): this;
     done(): boolean;
@@ -35,7 +37,10 @@ export declare class TinyLex {
         };
     };
     private _testRuleSet(chunk);
-    private _handleMatches(rule, match, chunk);
-    private _currentLine();
+    private _handleMatch(rule, match, chunk);
+    private _handleError(chunk);
+    private _tokenizeChar(chunk);
+    private _getErrorStr(chunk);
+    private _lineAndCol();
     private _destroy();
 }

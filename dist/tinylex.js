@@ -93,7 +93,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var opts = {
-    throwOnMismatch: false
+    onError: 'tokenize'
 };
 
 var TinyLex = exports.TinyLex = function () {
@@ -107,12 +107,12 @@ var TinyLex = exports.TinyLex = function () {
         }
         this._code = code;
         this._rules = rules;
-        this._options = options;
         this._start = 0;
         this._tokens = [];
         this._onToken = function () {
             return null;
         };
+        this._errorAction = options.onError;
     }
 
     _createClass(TinyLex, [{
@@ -130,7 +130,7 @@ var TinyLex = exports.TinyLex = function () {
         key: 'lex',
         value: function lex() {
             if (this.done()) {
-                throw new Error('lexer is exhausted');
+                throw new Error('lexer is consumed');
             }
             while (!this.done()) {
                 var token = this._scan();
@@ -166,17 +166,11 @@ var TinyLex = exports.TinyLex = function () {
 
                 if (match) {
                     this._lastMatch = match;
-                    if (!this._handleMatches(rule, match, chunk)) {
+                    if (!this._handleMatch(rule, match, chunk)) {
                         return null;
                     }
                 } else {
-                    if (this._options.throwOnMismatch) {
-                        throw new Error('lex error:' + this._currentLine() + '\n  match not found for chunk:' + (' "' + chunk.replace(/\s+/g, ' ').slice(0, 32) + '..."'));
-                    } else {
-                        var char = chunk.slice(0, 1);
-                        this._tokens.push([char.toLocaleUpperCase(), char]);
-                        this._start += 1;
-                    }
+                    this._handleError(chunk);
                 }
             }
             if (this._tokens.length) {
@@ -215,8 +209,8 @@ var TinyLex = exports.TinyLex = function () {
             return [null, null];
         }
     }, {
-        key: '_handleMatches',
-        value: function _handleMatches(rule, match, chunk) {
+        key: '_handleMatch',
+        value: function _handleMatch(rule, match, chunk) {
             var tokens = [];
             var specifier = rule[1];
             if (typeof specifier === 'string') {
@@ -238,10 +232,37 @@ var TinyLex = exports.TinyLex = function () {
             return tokens.length ? true : false;
         }
     }, {
-        key: '_currentLine',
-        value: function _currentLine() {
+        key: '_handleError',
+        value: function _handleError(chunk) {
+            switch (this._errorAction) {
+                case 'throw':
+                    throw new Error(this._getErrorStr(chunk));
+                case 'tokenize':
+                    this._tokenizeChar(chunk);
+                    break;
+                default:
+                    this._start += 1;
+                    break;
+            }
+        }
+    }, {
+        key: '_tokenizeChar',
+        value: function _tokenizeChar(chunk) {
+            var char = chunk.slice(0, 1);
+            this._tokens.push([char.toLocaleUpperCase(), char]);
+            this._start += 1;
+        }
+    }, {
+        key: '_getErrorStr',
+        value: function _getErrorStr(chunk) {
+            return 'lex error:' + this._lineAndCol() + '\n  match not found for chunk:' + (' "' + chunk.replace(/\s+/g, ' ').slice(0, 32) + '..."');
+        }
+    }, {
+        key: '_lineAndCol',
+        value: function _lineAndCol() {
             var lines = this._code.slice(0, this._start).split('\n');
-            return lines.length;
+            var col = lines[lines.length - 1].length + 1;
+            return lines.length + ':' + col;
         }
     }, {
         key: '_destroy',

@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2018-01-03
+- Change error options to multiple choice (throw, tokenize, ignore).
+- Restructure error handling code.
+- Call rule functions with 'this' as context.
+- Constructor doesn't throw when rules is not an array.
+
+## [0.4.1] - 2018-01-02
+- The returned token may be a string in addition to a token tuple.
+
 ## [0.4.0] - 2018-01-02
 - TinyLex is on 'window' when script is loaded browser style.
 - Throw 'lexer is exhausted' when lex() is called on a spent lexer.

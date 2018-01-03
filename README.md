@@ -53,13 +53,13 @@ const LOGICAL = /^(?:\|\||&&|==|!=|<=|>=)/
 const WHITESPACE = /^\s/
 
 const rules = [
-  [COMMENT, 'COMMENT'],
-  [KEYWORD, 0],
-  [IDENTIFIER, 'IDENTIFIER'],
-  [NUMBER, 'NUMBER'],
-  [LOGICAL, 0],
-  [STRING_SINGLE, 'STRING'],
-  [STRING_DOUBLE, 'STRING'],
+  [COMMENT, 'COMMENT'],       // ['COMMENT', 'Darklord source']
+  [KEYWORD, 0],               // ['SUMMON', 'summon']
+  [IDENTIFIER, 'IDENTIFIER'], // ['IDENTIFIER', 'harken']
+  [NUMBER, 'NUMBER'],         // ['NUMBER', '12']
+  [LOGICAL, 0],               // ['||', '||']
+  [STRING_DOUBLE, 'STRING'],  // ['STRING', 'messenger']
+  [STRING_SINGLE, 'STRING'],  // ['STRING', 'All shall flee...']
   [WHITESPACE]
 ]
 ```
@@ -141,4 +141,45 @@ Result:
 [ 'IDENTIFIER', 'message' ]
 [ ')', ')' ]
 [ 'EOF', 'EOF' ]
+```
+
+## Rules
+
+Rules can be specified in the form `[RegExp, string|number|function|null|undefined]`
+
+`RegExp`: the match criteria specified as a regular expression object.
+
+`string`: the name of the token, e.g., `'COMMENT'` as in `[COMMENT, 'COMMENT']`. The token content is taken from match group `0` of the RegExp match object which produces the token `['COMMENT', '# Darklord source']`.
+
+`number`: the number of the match group to use for both the token name and content, as in `[KEYWORD, 0]` which produces the token `['SUMMON', 'summon']`.
+
+`null|undefined`: no token should be created from the match; effectively discards the match altogether, as in `[WHITESPACE]` which swallows whitespace with no other effect.
+
+`function`: a function used to create the token, discard the match, and/or advance the cursor by some positive, non-zero integer amount (`TinyLex` insists on advancing the cursor to avoid infinite loops).
+
+```javascript
+// We could use a function to swallow whitespace.
+[WHITESPACE, function (match, tokens, chunk) {
+  // Advance the cursor by one. If we don't return a number, the
+  // cursor is advanced by the size of the lexeme (match group 0),
+  // so in this case returning 1 is no different from returning
+  // null or undefined.
+  return 1
+}]
+```
+
+```javascript
+  // We could use a function customize the token in some way.
+  [LOGICAL, function (match, tokens, chunk) {
+    const lexeme = match[0]
+    switch (lexeme) {
+      case '&&': tokens.push(['OPERATOR', '&&']); break
+      case '||': tokens.push(['OPERATOR', '||']); break
+      default: tokens.push([lexeme, lexeme])
+    }
+
+    // We don't actually need to do this because by default the
+    // cursor is advanced by the lexeme length (match group 0).
+    return lexeme.length
+  }]
 ```

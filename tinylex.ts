@@ -145,7 +145,8 @@ export class TinyLex {
     else if (typeof specifier === 'function') {
       const num = specifier(match, tokens, chunk)
       const size = match[0].length
-      this._start += typeof num === 'number' ? (num || size) : size
+      this._start += typeof num === 'number'
+        ? (Math.floor(Math.abs(num)) || size) : size
     }
 
     else if (specifier == null) {

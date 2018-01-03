@@ -213,7 +213,7 @@ var TinyLex = exports.TinyLex = function () {
             } else if (typeof specifier === 'function') {
                 var num = specifier(match, tokens, chunk);
                 var size = match[0].length;
-                this._start += typeof num === 'number' ? num || size : size;
+                this._start += typeof num === 'number' ? Math.floor(Math.abs(num)) || size : size;
             } else if (specifier == null) {
                 this._start += match[0].length;
                 return false;

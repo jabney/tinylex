@@ -3,10 +3,10 @@
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
-	else if(typeof exports === 'object')
-		exports["TinyLex"] = factory();
-	else
-		root["TinyLex"] = factory();
+	else {
+		var a = factory();
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
 })(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -129,6 +129,9 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: 'lex',
         value: function lex() {
+            if (this.done()) {
+                throw new Error('lexer is exhausted');
+            }
             while (!this.done()) {
                 var token = this._scan();
                 if (token) {

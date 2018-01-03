@@ -4,6 +4,7 @@ export type RuleFn = (match: Match, tokens: Token[], chunk: string) => number|vo
 export type Rule = [RegExp, string|number|RuleFn]|[RegExp]
 export type RuleMatch = [Rule, Match]
 export type Ruleset = Rule[]
+export type OnToken = (token: Token) => void
 
 export interface Options {
   throwOnMismatch: boolean
@@ -19,6 +20,7 @@ export class TinyLex {
   private _options: Options
   private _start: number
   private _tokens: Token[]
+  private _onToken: OnToken
 
   constructor(code: string, rules: Ruleset, options: Options = opts) {
     if (!(Array.isArray(rules))) {
@@ -30,6 +32,11 @@ export class TinyLex {
     this._options = options
     this._start = 0
     this._tokens = []
+    this._onToken = () => {}
+  }
+
+  set onToken(fn: OnToken) {
+    this._onToken = fn
   }
 
   /**
@@ -47,9 +54,14 @@ export class TinyLex {
   lex(): Token {
     while(!this.done()) {
       const token = this._scan()
-      if (token) { return token }
+      if (token) {
+        this._onToken(token)
+        return token
+      }
     }
-    return ['EOF', 'EOF']
+    const eofToken: Token = ['EOF', 'EOF']
+    this._onToken(eofToken)
+    return eofToken
   }
 
   /**

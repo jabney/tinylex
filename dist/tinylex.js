@@ -110,6 +110,7 @@ var TinyLex = exports.TinyLex = function () {
         this._options = options;
         this._start = 0;
         this._tokens = [];
+        this._onToken = function () {};
     }
 
     _createClass(TinyLex, [{
@@ -127,10 +128,13 @@ var TinyLex = exports.TinyLex = function () {
             while (!this.done()) {
                 var token = this._scan();
                 if (token) {
+                    this._onToken(token);
                     return token;
                 }
             }
-            return ['EOF', 'EOF'];
+            var eofToken = ['EOF', 'EOF'];
+            this._onToken(eofToken);
+            return eofToken;
         }
     }, {
         key: '_scan',
@@ -231,6 +235,11 @@ var TinyLex = exports.TinyLex = function () {
         key: '_destroy',
         value: function _destroy() {
             this._code = this._rules = this._tokens = null;
+        }
+    }, {
+        key: 'onToken',
+        set: function set(fn) {
+            this._onToken = fn;
         }
     }]);
 

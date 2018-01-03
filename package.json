@@ -7,7 +7,7 @@
     "start": "webpack --watch",
     "dev": "npm run build && node dev/main dev/source.darklord",
     "build": "webpack",
-    "test": "npm run build && mocha"
+    "test": "npm run build && mocha spec/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -43,5 +43,6 @@
     "tinylex.ts",
     "dist/",
     "spec"
-  ]
+  ],
+  "dependencies": {}
 }

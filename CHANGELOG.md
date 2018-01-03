@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2018-01-02
+- Remove redundant tokens list check in _scan method.
+- Fix type annotation on option member.
+- Protect rule function return value by assuring it's a positive whole number greater than zero.
+
 ## [0.2.3] - 2018-01-02
 - Single character fallback tokens are converted to upper case.
 - Allow empty rulesets.

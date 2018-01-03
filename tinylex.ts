@@ -30,7 +30,7 @@ export class TinyLex {
     this._rules = rules || []
     this._cursor = 0
     this._tokens = []
-    this._onToken = () => { return null }
+    this._onToken = (token) => { return token }
     this._errorAction = options.onError || 'tokenize'
   }
 
@@ -57,9 +57,8 @@ export class TinyLex {
     while(!this.done()) {
       const token = this._scan()
       if (token) {
-        const newToken = this._onToken(token, this._lastMatch)
-        if (newToken) { return newToken }
-        return token
+        const _token = this._onToken(token, this._lastMatch)
+        if (_token) { return _token }
       }
     }
     const eofToken: Token = ['EOF', 'EOF']

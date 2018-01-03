@@ -48,6 +48,7 @@ lexer.onToken((token, match) => {
   // if (token[0] === 'CRAFT') {
   //   return ['CRAFTY', 'crafty']
   // }
+  return token
 })
 
 // Consume the lexer.

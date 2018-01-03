@@ -106,8 +106,8 @@ var TinyLex = exports.TinyLex = function () {
         this._rules = rules || [];
         this._cursor = 0;
         this._tokens = [];
-        this._onToken = function () {
-            return null;
+        this._onToken = function (token) {
+            return token;
         };
         this._errorAction = options.onError || 'tokenize';
     }
@@ -132,11 +132,10 @@ var TinyLex = exports.TinyLex = function () {
             while (!this.done()) {
                 var token = this._scan();
                 if (token) {
-                    var _newToken = this._onToken(token, this._lastMatch);
-                    if (_newToken) {
-                        return _newToken;
+                    var _token = this._onToken(token, this._lastMatch);
+                    if (_token) {
+                        return _token;
                     }
-                    return token;
                 }
             }
             var eofToken = ['EOF', 'EOF'];

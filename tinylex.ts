@@ -4,7 +4,7 @@ export type RuleFn = (match: Match, tokens: Token[], chunk: string) => number|vo
 export type Rule = [RegExp, string|number|RuleFn]|[RegExp]
 export type RuleMatch = [Rule, Match]
 export type Ruleset = Rule[]
-export type OnToken = (token: Token) => void
+export type OnToken = (token: Token, match: Match) => Token
 
 export interface Options {
   throwOnMismatch: boolean
@@ -21,6 +21,7 @@ export class TinyLex {
   private _start: number
   private _tokens: Token[]
   private _onToken: OnToken
+  private _lastMatch: Match
 
   constructor(code: string, rules: Ruleset, options: Options = opts) {
     if (!(Array.isArray(rules))) {
@@ -32,7 +33,7 @@ export class TinyLex {
     this._options = options
     this._start = 0
     this._tokens = []
-    this._onToken = () => {}
+    this._onToken = () => { return null }
   }
 
   onToken(fn: OnToken): this {
@@ -44,9 +45,7 @@ export class TinyLex {
    * Return true if the lexer is consumed.
    */
   done(): boolean {
-    const _done = !this._code || this._start >= this._code.length
-    if (_done) { this._destroy() }
-    return _done
+    return !this._code || this._start >= this._code.length
   }
 
   /**
@@ -56,12 +55,14 @@ export class TinyLex {
     while(!this.done()) {
       const token = this._scan()
       if (token) {
-        this._onToken(token)
+        const newToken = this._onToken(token, this._lastMatch)
+        if (newToken) { return newToken }
         return token
       }
     }
     const eofToken: Token = ['EOF', 'EOF']
-    this._onToken(eofToken)
+    this._onToken(eofToken, null)
+    this._destroy()
     return eofToken
   }
 
@@ -85,6 +86,7 @@ export class TinyLex {
       const [rule, match] = this._testRuleSet(chunk)
 
       if (match) {
+        this._lastMatch = match
         if (!this._handleMatches(rule, match, chunk)) {
           return null
         }
@@ -186,7 +188,7 @@ export class TinyLex {
    * Clear member variable referneces.
    */
   private _destroy(): void {
-    this._code = this._rules = this._tokens = null
-    this._onToken = null
+    this._code = this._rules = this._tokens = this._onToken
+      = this._lastMatch = null
   }
 }

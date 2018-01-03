@@ -110,7 +110,9 @@ var TinyLex = exports.TinyLex = function () {
         this._options = options;
         this._start = 0;
         this._tokens = [];
-        this._onToken = function () {};
+        this._onToken = function () {
+            return null;
+        };
     }
 
     _createClass(TinyLex, [{
@@ -122,11 +124,7 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: 'done',
         value: function done() {
-            var _done = !this._code || this._start >= this._code.length;
-            if (_done) {
-                this._destroy();
-            }
-            return _done;
+            return !this._code || this._start >= this._code.length;
         }
     }, {
         key: 'lex',
@@ -134,12 +132,16 @@ var TinyLex = exports.TinyLex = function () {
             while (!this.done()) {
                 var token = this._scan();
                 if (token) {
-                    this._onToken(token);
+                    var newToken = this._onToken(token, this._lastMatch);
+                    if (newToken) {
+                        return newToken;
+                    }
                     return token;
                 }
             }
             var eofToken = ['EOF', 'EOF'];
-            this._onToken(eofToken);
+            this._onToken(eofToken, null);
+            this._destroy();
             return eofToken;
         }
     }, {
@@ -160,6 +162,7 @@ var TinyLex = exports.TinyLex = function () {
                     match = _testRuleSet3[1];
 
                 if (match) {
+                    this._lastMatch = match;
                     if (!this._handleMatches(rule, match, chunk)) {
                         return null;
                     }
@@ -240,8 +243,7 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: '_destroy',
         value: function _destroy() {
-            this._code = this._rules = this._tokens = null;
-            this._onToken = null;
+            this._code = this._rules = this._tokens = this._onToken = this._lastMatch = null;
         }
     }]);
 

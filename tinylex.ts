@@ -52,6 +52,10 @@ export class TinyLex {
    * Return a single lexer match or eof.
    */
   lex(): Token {
+    if (this.done()) {
+      throw new Error('lexer is exhausted')
+    }
+
     while(!this.done()) {
       const token = this._scan()
       if (token) {

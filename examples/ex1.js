@@ -43,18 +43,29 @@ harken.wield(message)
 
 const lexer = new TinyLex(code, rules)
 
-lexer.onToken((token) => {
-  console.log('token:', token)
+lexer.onToken((token, match) => {
+  // Intercept and modify tokens here or return a new one.
+  // The EOF token cannot be modified and its match will be null.
+  // if (token[0] === 'CRAFT') {
+  //   return ['CRAFTY', 'crafty']
+  // }
 })
 
+// Consume the lexer.
 for (let token of lexer) {
   console.log(token)
 }
+
+// or
 
 while(!lexer.done()) {
   console.log(lexer.lex())
 }
 
+// or
+
 console.log([...lexer])
+
+// or
 
 console.log(lexer.tokenize())

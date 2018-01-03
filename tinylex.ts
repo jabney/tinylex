@@ -4,7 +4,7 @@ export type RuleFn = (match: Match, tokens: Token[], chunk: string) => number|vo
 export type Rule = [RegExp, string|number|RuleFn]|[RegExp]
 export type RuleMatch = [Rule, Match]
 export type Ruleset = Rule[]
-export type OnToken = (token: Token, match: Match) => Token
+export type OnToken = (token: Token, match: Match) => Token|string
 
 export interface Options {
   throwOnMismatch: boolean
@@ -51,7 +51,7 @@ export class TinyLex {
   /**
    * Return a single lexer match or eof.
    */
-  lex(): Token {
+  lex(): Token|string {
     if (this.done()) {
       throw new Error('lexer is exhausted')
     }
@@ -65,15 +65,15 @@ export class TinyLex {
       }
     }
     const eofToken: Token = ['EOF', 'EOF']
-    this._onToken(eofToken, null)
+    const newToken = this._onToken(eofToken, null)
     this._destroy()
-    return eofToken
+    return newToken || eofToken
   }
 
   /**
    * Consume the lexer and return a list of its tokens.
    */
-  tokenize(): Token[] {
+  tokenize(): (Token|string)[] {
     return [...this]
   }
 

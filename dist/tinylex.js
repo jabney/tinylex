@@ -135,17 +135,17 @@ var TinyLex = exports.TinyLex = function () {
             while (!this.done()) {
                 var token = this._scan();
                 if (token) {
-                    var newToken = this._onToken(token, this._lastMatch);
-                    if (newToken) {
-                        return newToken;
+                    var _newToken = this._onToken(token, this._lastMatch);
+                    if (_newToken) {
+                        return _newToken;
                     }
                     return token;
                 }
             }
             var eofToken = ['EOF', 'EOF'];
-            this._onToken(eofToken, null);
+            var newToken = this._onToken(eofToken, null);
             this._destroy();
-            return eofToken;
+            return newToken || eofToken;
         }
     }, {
         key: 'tokenize',

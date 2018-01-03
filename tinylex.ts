@@ -3,7 +3,6 @@ export type Token = [string, string]
 export type RuleFn = (match, tokens, chunk: string) => number|void
 export type Rule = [RegExp, string|number|RuleFn]|[RegExp]
 export type RuleMatch = [Rule, Match]
-
 export type Ruleset = Rule[]
 
 export interface Options {
@@ -15,11 +14,11 @@ const opts: Options = {
 }
 
 export class TinyLex {
-  public _code: string
-  public _rules: Rule[]
-  public _options: Options
-  public _start: number
-  public _tokens: Token[]
+  private _code: string
+  private _rules: Rule[]
+  private _options: Options
+  private _start: number
+  private _tokens: Token[]
 
   constructor(code: string, rules: Ruleset, options: Options = opts) {
     if (!(Array.isArray(rules))) {

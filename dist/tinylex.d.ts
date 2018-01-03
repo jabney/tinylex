@@ -8,11 +8,11 @@ export interface Options {
     throwOnMismatch: boolean;
 }
 export declare class TinyLex {
-    _code: string;
-    _rules: Rule[];
-    _options: Options;
-    _start: number;
-    _tokens: Token[];
+    private _code;
+    private _rules;
+    private _options;
+    private _start;
+    private _tokens;
     constructor(code: string, rules: Ruleset, options?: Options);
     done(): boolean;
     lex(): Token;

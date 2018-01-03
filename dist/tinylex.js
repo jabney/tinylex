@@ -109,7 +109,7 @@ var TinyLex = exports.TinyLex = function () {
         this._onToken = function () {
             return null;
         };
-        this._errorAction = options.onError;
+        this._errorAction = options.onError || 'tokenize';
     }
 
     _createClass(TinyLex, [{

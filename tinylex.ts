@@ -31,7 +31,7 @@ export class TinyLex {
     this._cursor = 0
     this._tokens = []
     this._onToken = () => { return null }
-    this._errorAction = options.onError
+    this._errorAction = options.onError || 'tokenize'
   }
 
   onToken(fn: OnToken): this {

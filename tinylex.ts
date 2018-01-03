@@ -26,12 +26,8 @@ export class TinyLex {
   private _errorAction: ErrorAction
 
   constructor(code: string, rules: Ruleset, options: Options = opts) {
-    if (!(Array.isArray(rules))) {
-      throw new Error(
-        'Invalid ruleset: rules must be a non-zero length array')
-    }
-    this._code = code
-    this._rules = rules
+    this._code = code || ''
+    this._rules = rules || []
     this._start = 0
     this._tokens = []
     this._onToken = () => { return null }

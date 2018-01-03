@@ -102,11 +102,8 @@ var TinyLex = exports.TinyLex = function () {
 
         _classCallCheck(this, TinyLex);
 
-        if (!Array.isArray(rules)) {
-            throw new Error('Invalid ruleset: rules must be a non-zero length array');
-        }
-        this._code = code;
-        this._rules = rules;
+        this._code = code || '';
+        this._rules = rules || [];
         this._start = 0;
         this._tokens = [];
         this._onToken = function () {
@@ -221,7 +218,7 @@ var TinyLex = exports.TinyLex = function () {
                 tokens.push([value.toLocaleUpperCase(), value]);
                 this._start += match[0].length;
             } else if (typeof specifier === 'function') {
-                var num = specifier(match, tokens, chunk);
+                var num = specifier.call(this, match, tokens, chunk);
                 var size = match[0].length;
                 this._start += typeof num === 'number' ? Math.floor(Math.abs(num)) || size : size;
             } else if (specifier == null) {

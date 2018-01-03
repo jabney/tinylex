@@ -147,7 +147,7 @@ Result:
 
 ```javascript
 const rules = [
-  [COMMENT, 'COMMENT'],       // ['COMMENT', 'Darklord source']
+  [COMMENT, 'COMMENT'],       // ['COMMENT', '# Darklord source']
   [KEYWORD, 0],               // ['SUMMON', 'summon']
   [IDENTIFIER, 'IDENTIFIER'], // ['IDENTIFIER', 'harken']
   [NUMBER, 'NUMBER'],         // ['NUMBER', '12']

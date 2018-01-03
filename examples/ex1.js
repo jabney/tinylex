@@ -36,7 +36,7 @@ forge harken(msg) {
 }
 
 craft lieutenants = 12
-craft message: "I have " + leutenants + " servants"
+craft message = "I have " + leutenants + " servants"
 
 harken.wield(message)
 `

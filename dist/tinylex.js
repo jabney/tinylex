@@ -104,7 +104,7 @@ var TinyLex = exports.TinyLex = function () {
 
         this._code = code || '';
         this._rules = rules || [];
-        this._start = 0;
+        this._cursor = 0;
         this._tokens = [];
         this._onToken = function () {
             return null;
@@ -121,7 +121,7 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: 'done',
         value: function done() {
-            return !this._code || this._start >= this._code.length;
+            return !this._code || this._cursor >= this._code.length;
         }
     }, {
         key: 'lex',
@@ -152,8 +152,8 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: '_scan',
         value: function _scan() {
-            while (!this._tokens.length && this._start < this._code.length) {
-                var chunk = this._code.slice(this._start);
+            while (!this._tokens.length && this._cursor < this._code.length) {
+                var chunk = this._code.slice(this._cursor);
                 var len = this._rules.length;
 
                 var _testRuleSet2 = this._testRuleSet(chunk),
@@ -212,17 +212,17 @@ var TinyLex = exports.TinyLex = function () {
             var specifier = rule[1];
             if (typeof specifier === 'string') {
                 tokens.push([specifier, match[1] != null ? match[1] : match[0]]);
-                this._start += match[0].length;
+                this._cursor += match[0].length;
             } else if (typeof specifier === 'number') {
                 var value = match[specifier];
                 tokens.push([value.toLocaleUpperCase(), value]);
-                this._start += match[0].length;
+                this._cursor += match[0].length;
             } else if (typeof specifier === 'function') {
                 var num = specifier.call(this, match, tokens, chunk);
                 var size = match[0].length;
-                this._start += typeof num === 'number' ? Math.floor(Math.abs(num)) || size : size;
+                this._cursor += typeof num === 'number' ? Math.floor(Math.abs(num)) || size : size;
             } else if (specifier == null) {
-                this._start += match[0].length;
+                this._cursor += match[0].length;
                 return false;
             }
             this._tokens = this._tokens.concat(tokens.reverse());
@@ -235,7 +235,7 @@ var TinyLex = exports.TinyLex = function () {
                 case 'throw':
                     throw new Error(this._getErrorStr(chunk));
                 case 'ignore':
-                    this._start += 1;
+                    this._cursor += 1;
                     break;
                 default:
                     this._tokenizeChar(chunk);
@@ -246,7 +246,7 @@ var TinyLex = exports.TinyLex = function () {
         value: function _tokenizeChar(chunk) {
             var char = chunk.slice(0, 1);
             this._tokens.push([char.toLocaleUpperCase(), char]);
-            this._start += 1;
+            this._cursor += 1;
         }
     }, {
         key: '_getErrorStr',
@@ -256,7 +256,7 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: '_lineAndCol',
         value: function _lineAndCol() {
-            var lines = this._code.slice(0, this._start).split('\n');
+            var lines = this._code.slice(0, this._cursor).split('\n');
             var col = lines[lines.length - 1].length + 1;
             return lines.length + ':' + col;
         }

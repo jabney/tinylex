@@ -19,7 +19,7 @@ export class TinyLex {
   private _code: string
   private _rules: Rule[]
   private _options: Options
-  private _start: number
+  private _cursor: number
   private _tokens: Token[]
   private _onToken: OnToken
   private _lastMatch: Match
@@ -28,7 +28,7 @@ export class TinyLex {
   constructor(code: string, rules: Ruleset, options: Options = opts) {
     this._code = code || ''
     this._rules = rules || []
-    this._start = 0
+    this._cursor = 0
     this._tokens = []
     this._onToken = () => { return null }
     this._errorAction = options.onError
@@ -43,7 +43,7 @@ export class TinyLex {
    * Return true if the lexer is consumed.
    */
   done(): boolean {
-    return !this._code || this._start >= this._code.length
+    return !this._code || this._cursor >= this._code.length
   }
 
   /**
@@ -81,8 +81,8 @@ export class TinyLex {
   private _scan(): Token {
     // Process input while there aren't any tokens and we
     // haven't reached the end.
-    while(!this._tokens.length && this._start < this._code.length) {
-      const chunk = this._code.slice(this._start)
+    while(!this._tokens.length && this._cursor < this._code.length) {
+      const chunk = this._code.slice(this._cursor)
       const len = this._rules.length
 
       const [rule, match] = this._testRuleSet(chunk)
@@ -141,24 +141,24 @@ export class TinyLex {
 
     if (typeof specifier === 'string') {
       tokens.push([specifier, match[1] != null ? match[1] : match[0]])
-      this._start += match[0].length
+      this._cursor += match[0].length
     }
 
     else if (typeof specifier === 'number') {
       const value = match[specifier]
       tokens.push([value.toLocaleUpperCase(), value])
-      this._start += match[0].length
+      this._cursor += match[0].length
     }
 
     else if (typeof specifier === 'function') {
       const num = specifier.call(this, match, tokens, chunk)
       const size = match[0].length
-      this._start += typeof num === 'number'
+      this._cursor += typeof num === 'number'
         ? (Math.floor(Math.abs(num)) || size) : size
     }
 
     else if (specifier == null) {
-      this._start += match[0].length
+      this._cursor += match[0].length
       // A token was not added.
       return false
     }
@@ -175,7 +175,7 @@ export class TinyLex {
   private _handleError(chunk: string) {
     switch(this._errorAction) {
       case 'throw': throw new Error(this._getErrorStr(chunk))
-      case 'ignore': this._start += 1; break
+      case 'ignore': this._cursor += 1; break
       default: this._tokenizeChar(chunk)
     }
   }
@@ -186,7 +186,7 @@ export class TinyLex {
   private _tokenizeChar(chunk: string): void {
     const char = chunk.slice(0, 1)
     this._tokens.push([char.toLocaleUpperCase(), char])
-    this._start += 1
+    this._cursor += 1
   }
 
   /**
@@ -202,7 +202,7 @@ export class TinyLex {
    * Return the current line and column based on the lexer progress.
    */
   private _lineAndCol(): string {
-    const lines = this._code.slice(0, this._start).split('\n')
+    const lines = this._code.slice(0, this._cursor).split('\n')
     const col = lines[lines.length - 1].length + 1
     return `${lines.length}:${col}`
   }

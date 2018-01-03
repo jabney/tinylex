@@ -13,7 +13,7 @@ export declare class TinyLex {
     private _code;
     private _rules;
     private _options;
-    private _start;
+    private _cursor;
     private _tokens;
     private _onToken;
     private _lastMatch;

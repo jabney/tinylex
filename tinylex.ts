@@ -179,8 +179,8 @@ export class TinyLex {
   private _handleError(chunk: string) {
     switch(this._errorAction) {
       case 'throw': throw new Error(this._getErrorStr(chunk))
-      case 'tokenize': this._tokenizeChar(chunk); break
-      default: this._start += 1; break
+      case 'ignore': this._start += 1; break
+      default: this._tokenizeChar(chunk)
     }
   }
 

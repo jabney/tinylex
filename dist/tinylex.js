@@ -237,12 +237,11 @@ var TinyLex = exports.TinyLex = function () {
             switch (this._errorAction) {
                 case 'throw':
                     throw new Error(this._getErrorStr(chunk));
-                case 'tokenize':
-                    this._tokenizeChar(chunk);
-                    break;
-                default:
+                case 'ignore':
                     this._start += 1;
                     break;
+                default:
+                    this._tokenizeChar(chunk);
             }
         }
     }, {

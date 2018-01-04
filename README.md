@@ -89,13 +89,15 @@ while(!lexer.done()) {
 or
 
 ```javascript
-console.log([...lexer])
+const tokens = [...lexer]
+console.log(tokens)
 ```
 
 or
 
 ```javascript
-lexer.tokenize()
+const tokens = lexer.tokenize()
+console.log(tokens)
 ```
 
 Result:

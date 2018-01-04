@@ -161,6 +161,7 @@ export class TinyLex {
       return false
     }
 
+    // Reverse before concatenation because values are popped.
     this._tokens = this._tokens.concat(tokens.reverse())
 
     // A token may have been added.

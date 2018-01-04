@@ -219,3 +219,20 @@ lexer.onToken(function (token, match) {
   return token
 })
 ```
+
+## Options
+
+The option `onError` specifies what to do if a match is not found at the cursor.
+
+`tokenize`: (default) Tokenize the next single character and advance the cursor by one.
+
+`ignore`: Advance the cursor by one and do nothing else.
+
+`throw`: Throw an error indicating that a match was not found.
+
+```javascript
+// onError can be 'tokenize', 'throw', or 'ignore'.
+const lexer = new TinyLex(code, rules, {onError: 'tokenize'})
+```
+
+Note: `onError` is the only configuration option.

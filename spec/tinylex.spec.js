@@ -118,7 +118,7 @@ describe('TinyLex rule function', function () {
       tokens.push(['ID', match[0]])
       return match[0].length
     }
-    var lexer = new TinyLex(code, altRules)
+    var lexer = new TinyLex(code, altRules, {})
     var tokens = lexer.tokenize().filter(function (token) {
       return token[0] === 'ID'
     })

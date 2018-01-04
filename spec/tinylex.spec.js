@@ -24,60 +24,66 @@ describe('TinyLex lexing', function () {
     assert.equal(tokens.length, 3)
   })
 
-  it ('produces four string tokens', function () {
+  it('produces four string tokens', function () {
     var tokens = lexer.tokenize().filter(function (token) {
       return token[0] === 'STRING'
     })
     assert.equal(tokens.length, 4)
   })
 
-  it ('produces five keyword tokens', function () {
+  it('produces five keyword tokens', function () {
     var tokens = lexer.tokenize().filter(function (token) {
       return keywords.indexOf(token[0].toLowerCase()) >= 0
     })
     assert.equal(tokens.length, 5)
   })
 
-  it ('produces nine identifier tokens', function () {
+  it('produces nine identifier tokens', function () {
     var tokens = lexer.tokenize().filter(function (token) {
       return token[0] === 'IDENTIFIER'
     })
     assert.equal(tokens.length, 9)
   })
 
-  it ('produces one number token', function () {
+  it('produces one number token', function () {
     var tokens = lexer.tokenize().filter(function (token) {
       return token[0] === 'NUMBER'
     })
     assert.equal(tokens.length, 1)
   })
 
-  it ('produces two concatenation tokens', function () {
+  it('produces two concatenation tokens', function () {
     var tokens = lexer.tokenize().filter(function (token) {
       return token[0] === '+'
     })
     assert.equal(tokens.length, 2)
   })
 
-  it ('produces six paren tokens', function () {
+  it('produces six paren tokens', function () {
     var tokens = lexer.tokenize().filter(function (token) {
       return token[0] === '(' || token[0] === ')'
     })
     assert.equal(tokens.length, 6)
   })
 
-  it ('produces two bracket tokens', function () {
+  it('produces two bracket tokens', function () {
     var tokens = lexer.tokenize().filter(function (token) {
       return token[0] === '{' || token[0] === '}'
     })
     assert.equal(tokens.length, 2)
   })
 
-  it ('produces two assignment tokens', function () {
+  it('produces two assignment tokens', function () {
     var tokens = lexer.tokenize().filter(function (token) {
       return token[0] === '='
     })
     assert.equal(tokens.length, 2)
+  })
+
+  it('falls back to "tokenize" behavior on wrong onError option', function () {
+    var lexer = new TinyLex(code, rules, {onError: 'wrong!'})
+    var tokens = lexer.tokenize()
+    assert.equal(tokens.length, 37)
   })
 })
 
@@ -192,5 +198,14 @@ describe('onToken function', function () {
       return token[0] === 'REPLACED'
     })
     assert.equal(replaced.length, 37)
+  })
+
+  it('contains EOF token when all other tokens are removed', function () {
+    var lexer = new TinyLex(code, rules)
+    lexer.onToken(function () {})
+    var tokens = lexer.tokenize()
+    assert.equal(tokens.length, 1)
+    assert.equal(tokens[0][0], 'EOF')
+    assert.equal(tokens[0][1], 'EOF')
   })
 })

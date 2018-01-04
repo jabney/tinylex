@@ -1,3 +1,4 @@
+'use strict'
 var assert = require('assert')
 var TinyLex = require('../index')
 var code = require('./source/darklord')
@@ -99,6 +100,13 @@ describe('TinyLex errors', function () {
     var lexer = new TinyLex(code, rules, {onError: "tokenize"})
     lexer.tokenize()
     assert.throws(function () { lexer.lex() })
+  })
+
+  it('does not crash when code and rules are omitted', function () {
+    const lexer = new TinyLex()
+    let tokens
+    assert.doesNotThrow(function () { tokens = lexer.tokenize()})
+    assert.equal(tokens.length, 0)
   })
 })
 

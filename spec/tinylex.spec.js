@@ -182,6 +182,16 @@ describe('TinyLex rule function', function () {
     })
     assert.equal(tokens.length, 6)
   })
+
+  it('advances the cursor even if zero is returned', function () {
+    var WHITESPACE = 7
+    altRules[WHITESPACE][1] = function (match, tokens, chunk) {
+      return 0
+    }
+    var lexer = new TinyLex(code, altRules)
+    var tokens = lexer.tokenize()
+    assert.equal(tokens.length, 37)
+  })
 })
 
 describe('onToken function', function () {

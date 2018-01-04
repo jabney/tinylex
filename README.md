@@ -168,7 +168,7 @@ Rules can be specified in the form `[RegExp, string|number|function|null|undefin
 
 `string`: the name of the token, e.g., `'COMMENT'` as in `[COMMENT, 'COMMENT']`. The token content is taken from match group 0 (the lexeme) of the RegExp match object which produces the token `['COMMENT', '# Darklord source']`. If the RegExp contains a match group, then match group 1 is used, as is the case for the RegExp used for the string rules, e.g., `/^"([^"]*)"/`, which captures the portion of the match between the quotes. This only works for match group 1.
 
-`number`: the number of the match group to use for both the token name and content, as in `[KEYWORD, 0]` which produces the token `['SUMMON', 'summon']`. This means that if your regular expression contains a match group, you can use it to geneerate the name and value for the token: `[SOME_REGEXP, 1]`.
+`number`: the number of the match group to use for both the token name and content, as in `[KEYWORD, 0]` which produces the token `['SUMMON', 'summon']`. This means that if your regular expression contains a match group, you can use it to generate the name and value for the token: `[SOME_REGEXP, 1]`.
 
 `null|undefined`: no token should be created from the match - effectively discards the match altogether, as in `[WHITESPACE]` which swallows whitespace with no other effect. The cursor is advanced by the length of the lexeme (match group 0).
 

@@ -1,4 +1,6 @@
 # tinylex
+[![Build Status](https://travis-ci.org/jabney/tinylex.svg?branch=master)](https://travis-ci.org/jabney/tinylex)
+
 A simple iterative lexer written in TypeScript
 
 **Under development**

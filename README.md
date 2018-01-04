@@ -201,6 +201,8 @@ Rules can be specified in the form `[RegExp, string|number|function|null|undefin
 }]
 ```
 
+Note: when using a rule function you must push one or more tokens onto the tokens array unless you intentionally intend to discard it. If you tokens are pushed no token will be generated.
+
 ## The `onToken` Function
 
 This function, if given, is called for every token. It can modify the contents of the token, return an entirely new token, or discard some or all tokens (except for the final `EOF` token). `onToken` can be utilized by calling `lexer.onToken` and passing a function definition. This function is called with its `this` context set to the lexer instance.

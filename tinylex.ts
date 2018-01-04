@@ -43,7 +43,7 @@ export class TinyLex {
    * Return true if the lexer is consumed.
    */
   done(): boolean {
-    return !this._code || this._cursor >= this._code.length
+    return this._cursor >= this._code.length
   }
 
   /**
@@ -63,7 +63,6 @@ export class TinyLex {
     }
     const eofToken: Token = ['EOF', 'EOF']
     const newToken = this._onToken(eofToken, null)
-    this._destroy()
     return newToken || eofToken
   }
 
@@ -204,13 +203,5 @@ export class TinyLex {
     const lines = this._code.slice(0, this._cursor).split('\n')
     const col = lines[lines.length - 1].length + 1
     return `${lines.length}:${col}`
-  }
-
-  /**
-   * Clear member variable referneces.
-   */
-  private _destroy(): void {
-    this._code = this._rules = this._tokens = this._onToken
-      = this._lastMatch = null
   }
 }

@@ -42,5 +42,4 @@ export declare class TinyLex {
     private _tokenizeChar(chunk);
     private _getErrorStr(chunk);
     private _lineAndCol();
-    private _destroy();
 }

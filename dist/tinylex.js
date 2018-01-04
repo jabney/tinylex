@@ -121,7 +121,7 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: 'done',
         value: function done() {
-            return !this._code || this._cursor >= this._code.length;
+            return this._cursor >= this._code.length;
         }
     }, {
         key: 'lex',
@@ -140,7 +140,6 @@ var TinyLex = exports.TinyLex = function () {
             }
             var eofToken = ['EOF', 'EOF'];
             var newToken = this._onToken(eofToken, null);
-            this._destroy();
             return newToken || eofToken;
         }
     }, {
@@ -258,11 +257,6 @@ var TinyLex = exports.TinyLex = function () {
             var lines = this._code.slice(0, this._cursor).split('\n');
             var col = lines[lines.length - 1].length + 1;
             return lines.length + ':' + col;
-        }
-    }, {
-        key: '_destroy',
-        value: function _destroy() {
-            this._code = this._rules = this._tokens = this._onToken = this._lastMatch = null;
         }
     }]);
 

@@ -172,7 +172,7 @@ Rules can be specified in the form `[RegExp, string|number|function|null|undefin
 
 `null|undefined`: no token should be created from the match - effectively discards the match altogether, as in `[WHITESPACE]` which swallows whitespace with no other effect. The cursor is advanced by the length of the lexeme (match group 0).
 
-`function`: a function used to create the token, discard the match, and/or advance the cursor by some positive, non-zero integer amount (`TinyLex` advances the cursor to avoid infinite loops). Functions here can also push multiple tokens if desired. If the function returns `null` or `undefined`, the cursor is advanced by the length of the lexeme (match group 0). If the function returns a number <= 1, the cursor is advanced by one. The function's `this` context is set to the lexer instance.
+`function`: a function used to create the token, discard the match, and/or advance the cursor by some positive, non-zero integer amount (`TinyLex` always advances the cursor to avoid infinite loops). Functions here can also push multiple tokens if desired. If the function returns `null` or `undefined`, the cursor is advanced by the length of the lexeme (match group 0). If the function returns a number <= 1, the cursor is advanced by one. The function's `this` context is set to the lexer instance.
 
 ```javascript
 // We could use a function to swallow whitespace.

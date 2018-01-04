@@ -116,6 +116,7 @@ describe('TinyLex rule function', function () {
     // Replace the identifier rule specifier with a function.
     altRules[IDENTIFIER][1] = function (match, tokens, chunk) {
       tokens.push(['ID', match[0]])
+      return match[0].length
     }
     var lexer = new TinyLex(code, altRules)
     var tokens = lexer.tokenize().filter(function (token) {

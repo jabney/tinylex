@@ -150,7 +150,10 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: '_scan',
         value: function _scan() {
-            while (!this._tokens.length && this._cursor < this._code.length) {
+            if (this._tokens.length) {
+                return this._tokens.pop();
+            }
+            while (this._cursor < this._code.length) {
                 var chunk = this._code.slice(this._cursor);
                 var len = this._rules.length;
 
@@ -167,9 +170,6 @@ var TinyLex = exports.TinyLex = function () {
                 } else {
                     this._handleError(chunk);
                 }
-            }
-            if (this._tokens.length) {
-                return this._tokens.pop();
             }
         }
     }, {

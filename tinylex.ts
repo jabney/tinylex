@@ -77,9 +77,10 @@ export class TinyLex {
    * Lexer scan method.
    */
   private _scan(): Token {
+    if (this._tokens.length) { return this._tokens.pop() }
     // Process input while there aren't any tokens and we
     // haven't reached the end.
-    while(!this._tokens.length && this._cursor < this._code.length) {
+    while(this._cursor < this._code.length) {
       const chunk = this._code.slice(this._cursor)
       const len = this._rules.length
 
@@ -93,10 +94,6 @@ export class TinyLex {
       } else {
         this._handleError(chunk)
       }
-    }
-
-    if (this._tokens.length) {
-      return this._tokens.pop()
     }
   }
 

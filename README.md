@@ -201,7 +201,7 @@ Rules can be specified in the form `[RegExp, string|number|function|null|undefin
 }]
 ```
 
-Note: when using a rule function you must push one or more tokens onto the tokens array unless you intentionally intend to discard the match. If you tokens are pushed no token will be generated.
+Note: when using a rule function you must push one or more tokens onto the tokens array unless you intentionally intend to discard the match. If no tokens are pushed no token will be generated.
 
 ## The `onToken` Function
 

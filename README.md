@@ -186,7 +186,7 @@ Rules can be specified in the form `[RegExp, string|number|function|null|undefin
 ```
 
 ```javascript
-// We could use a function customize the token in some way.
+// We could use a function to customize the token in some way.
 [LOGICAL, function (match, tokens, chunk) {
   const lexeme = match[0]
   switch (lexeme) {

@@ -63,7 +63,7 @@ export class TinyLex {
     }
     const eofToken: Token = ['EOF', 'EOF']
     const newToken = this._onToken(eofToken, null)
-    return newToken || eofToken
+    return newToken || null
   }
 
   /**

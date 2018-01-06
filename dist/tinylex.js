@@ -140,7 +140,7 @@ var TinyLex = exports.TinyLex = function () {
             }
             var eofToken = ['EOF', 'EOF'];
             var newToken = this._onToken(eofToken, null);
-            return newToken || eofToken;
+            return newToken || null;
         }
     }, {
         key: 'tokenize',

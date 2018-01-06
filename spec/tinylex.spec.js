@@ -241,12 +241,11 @@ describe('onToken function', function () {
     assert.equal(replaced.length, 37)
   })
 
-  it('contains EOF token when all other tokens are removed', function () {
+  it('eof is null when all other tokens are removed', function () {
     var lexer = new TinyLex(code, rules)
     lexer.onToken(function () {})
     var tokens = lexer.tokenize()
     assert.equal(tokens.length, 1)
-    assert.equal(tokens[0][0], 'EOF')
-    assert.equal(tokens[0][1], 'EOF')
+    assert.equal(tokens[0], null)
   })
 })

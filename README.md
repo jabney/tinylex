@@ -205,7 +205,7 @@ Note: when using a rule function you must push one or more tokens onto the token
 
 ## The `onToken` Function
 
-This function, if given, is called for every token. It can modify the contents of the token, return an entirely new token, or discard some or all tokens (except for the final `EOF` token). `onToken` can be utilized by calling `lexer.onToken` and passing a function definition. This function is called with its `this` context set to the lexer instance.
+This function, if given, is called for every token. It can modify the contents of the token, return an entirely new token, or discard some or all tokens (except for the final `EOF` token which can be transformed but not removed). `onToken` can be utilized by calling `lexer.onToken` and passing a function definition. This function is called with its `this` context set to the lexer instance.
 
 ```javascript
 const lexer = new TinyLex(code, rules)
@@ -215,7 +215,8 @@ const lexer = new TinyLex(code, rules)
 lexer.onToken(function (token, match) {
   // We can return a new token, the original token, a modified
   // version of the given token, or nothing at all - in which case
-  // the token will be discarded except for the EOF token.
+  // the token will be discarded except for the EOF token which can
+  // only be modified or set to null.
   return token
 })
 ```

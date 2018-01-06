@@ -171,16 +171,34 @@ describe('TinyLex rule function', function () {
   })
 
   it('can insert multiple tokens', function () {
-    var COMMENT = 0
+    var COMMENT = 0, lexer, tokens
     altRules[COMMENT][1] = function (match, tokens, chunk) {
-      tokens.push(['COMMENT', 'COMMENT'])
-      tokens.push(['COMMENT', 'COMMENT'])
+      tokens.push(['COMMENT1', 'COMMENT'])
+      tokens.push(['COMMENT2', 'COMMENT'])
     }
-    var lexer = new TinyLex(code, altRules)
-    var tokens = lexer.tokenize().filter(function (token) {
-      return token[0] === 'COMMENT'
+    lexer = new TinyLex(code, altRules)
+    tokens = lexer.tokenize().filter(function (token) {
+      return token[0] === 'COMMENT1'
+    })
+    assert.equal(tokens.length, 3)
+
+    lexer = new TinyLex(code, altRules)
+    tokens = lexer.tokenize().filter(function (token) {
+      return token[0] === 'COMMENT2'
+    })
+    assert.equal(tokens.length, 3)
+
+    lexer = new TinyLex(code, altRules)
+    tokens = lexer.tokenize().filter(function (token) {
+      return token[1] === 'COMMENT'
     })
     assert.equal(tokens.length, 6)
+    assert.equal(tokens[0][0], 'COMMENT1')
+    assert.equal(tokens[1][0], 'COMMENT2')
+    assert.equal(tokens[2][0], 'COMMENT1')
+    assert.equal(tokens[3][0], 'COMMENT2')
+    assert.equal(tokens[4][0], 'COMMENT1')
+    assert.equal(tokens[5][0], 'COMMENT2')
   })
 
   it('advances the cursor even if zero or < 1 is returned', function () {

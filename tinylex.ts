@@ -54,7 +54,7 @@ export class TinyLex {
       throw new Error('lexer is consumed')
     }
 
-    while(!this.done()) {
+    while (!this.done()) {
       const token = this._scan()
       if (token) {
         const _token = this._onToken(token, this._lastMatch)

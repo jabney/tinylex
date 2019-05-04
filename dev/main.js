@@ -3,7 +3,7 @@ const lexd = require('./lexd')
 
 const path = process.argv[2]
 
-const source = fs.readFile(path, (err, buffer) => {
+fs.readFile(path, (err, buffer) => {
   if (err) { return console.log(err) }
   const lexer = lexd(buffer.toString())
   const tokens = lexer.tokenize()
@@ -12,14 +12,7 @@ const source = fs.readFile(path, (err, buffer) => {
 })
 
 function print(tokens) {
-  let indent = 0
-
   tokens.forEach((token) => {
-    if (token[0] === 'INDENT') {
-      indent += 2
-    } else if (token[0] === 'DEDENT') {
-      indent -= 2
-    }
-    console.log(' '.repeat(indent), token)
+    console.log(token)
   })
 }

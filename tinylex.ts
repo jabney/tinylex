@@ -24,6 +24,7 @@ export class TinyLex {
   private _onToken: OnToken
   private _lastMatch: Match
   private _errorAction: ErrorAction
+  private _done: boolean
 
   constructor(code: string, rules: Ruleset, options: Options = opts) {
     this._code = code || ''
@@ -43,27 +44,32 @@ export class TinyLex {
    * Return true if the lexer is consumed.
    */
   done(): boolean {
-    return this._cursor >= this._code.length && this._tokens.length === 0
+    return this._done
   }
 
   /**
    * Return a single lexer match or eof.
    */
   lex(): Token|string {
-    if (this.done()) {
+    if (this._done) {
       throw new Error('lexer is consumed')
     }
 
-    while (!this.done()) {
+    while (!this._done) {
       const token = this._scan()
       if (token) {
         const _token = this._onToken(token, this._lastMatch)
         if (_token) { return _token }
       }
+
+      // Check for done condition.
+      if (this._cursor >= this._code.length && this._tokens.length === 0) {
+        this._done = true
+        const eofToken: Token = ['EOF', 'EOF']
+        const newToken = this._onToken(eofToken, null)
+        return newToken || null
+      }
     }
-    const eofToken: Token = ['EOF', 'EOF']
-    const newToken = this._onToken(eofToken, null)
-    return newToken || null
   }
 
   /**

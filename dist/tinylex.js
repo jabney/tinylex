@@ -121,15 +121,15 @@ var TinyLex = exports.TinyLex = function () {
     }, {
         key: 'done',
         value: function done() {
-            return this._cursor >= this._code.length;
+            return this._done;
         }
     }, {
         key: 'lex',
         value: function lex() {
-            if (this.done()) {
+            if (this._done) {
                 throw new Error('lexer is consumed');
             }
-            while (!this.done()) {
+            while (!this._done) {
                 var token = this._scan();
                 if (token) {
                     var _token = this._onToken(token, this._lastMatch);
@@ -137,10 +137,13 @@ var TinyLex = exports.TinyLex = function () {
                         return _token;
                     }
                 }
+                if (this._cursor >= this._code.length && this._tokens.length === 0) {
+                    this._done = true;
+                    var eofToken = ['EOF', 'EOF'];
+                    var newToken = this._onToken(eofToken, null);
+                    return newToken || null;
+                }
             }
-            var eofToken = ['EOF', 'EOF'];
-            var newToken = this._onToken(eofToken, null);
-            return newToken || null;
         }
     }, {
         key: 'tokenize',
@@ -151,11 +154,10 @@ var TinyLex = exports.TinyLex = function () {
         key: '_scan',
         value: function _scan() {
             if (this._tokens.length) {
-                return this._tokens.pop();
+                return this._tokens.shift();
             }
             while (this._cursor < this._code.length) {
                 var chunk = this._code.slice(this._cursor);
-                var len = this._rules.length;
 
                 var _testRuleSet2 = this._testRuleSet(chunk),
                     _testRuleSet3 = _slicedToArray(_testRuleSet2, 2),
@@ -223,7 +225,7 @@ var TinyLex = exports.TinyLex = function () {
                 this._cursor += match[0].length;
                 return false;
             }
-            this._tokens = this._tokens.concat(tokens.reverse());
+            this._tokens.push.apply(this._tokens, tokens);
             return tokens.length ? true : false;
         }
     }, {

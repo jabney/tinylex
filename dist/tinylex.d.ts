@@ -18,6 +18,7 @@ export declare class TinyLex {
     private _onToken;
     private _lastMatch;
     private _errorAction;
+    private _done;
     constructor(code: string, rules: Ruleset, options?: Options);
     onToken(fn: OnToken): this;
     done(): boolean;

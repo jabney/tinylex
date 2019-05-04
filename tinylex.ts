@@ -43,7 +43,7 @@ export class TinyLex {
    * Return true if the lexer is consumed.
    */
   done(): boolean {
-    return this._cursor >= this._code.length
+    return this._cursor >= this._code.length && this._tokens.length === 0
   }
 
   /**
@@ -77,12 +77,11 @@ export class TinyLex {
    * Lexer scan method.
    */
   private _scan(): Token {
-    if (this._tokens.length) { return this._tokens.pop() }
+    if (this._tokens.length) { return this._tokens.shift() }
     // Process input while there aren't any tokens and we
     // haven't reached the end.
     while(this._cursor < this._code.length) {
       const chunk = this._code.slice(this._cursor)
-      const len = this._rules.length
 
       const [rule, match] = this._testRuleSet(chunk)
 
@@ -158,8 +157,7 @@ export class TinyLex {
       return false
     }
 
-    // Reverse before concatenation because values are popped.
-    this._tokens = this._tokens.concat(tokens.reverse())
+    this._tokens.push.apply(this._tokens, tokens)
 
     // A token may have been added.
     return tokens.length ? true : false

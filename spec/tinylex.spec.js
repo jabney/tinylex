@@ -110,9 +110,9 @@ describe('TinyLex errors', function () {
 
   it('does not crash when code and rules are omitted', function () {
     const lexer = new TinyLex()
-    let tokens
+    let tokens = []
     assert.doesNotThrow(function () { tokens = lexer.tokenize()})
-    assert.equal(tokens.length, 0)
+    assert.equal(tokens && tokens.length, 1)
   })
 })
 

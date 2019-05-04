@@ -8,7 +8,6 @@
     "dev": "npm run build && node dev/main dev/source.darklord",
     "build": "webpack",
     "test": "npm run build && mocha spec/*.spec.js",
-    "coverage": "npm run build && nyc --reporter=html  --reporter=text mocha spec/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -35,8 +34,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "mocha": "^4.1.0",
-    "nodemon": "^1.18.4",
-    "nyc": "^11.4.1",
+    "nodemon": "^1.19.0",
     "ts-loader": "^3.2.0",
     "typescript": "^2.6.2",
     "webpack": "^3.10.0"

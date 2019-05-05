@@ -55,6 +55,7 @@ export class TinyLex {
       throw new Error('lexer is consumed')
     }
 
+    // Scan until we get a token or the lexer completes.
     while (!this._done) {
       const token = this._scan()
       if (token) {
@@ -83,9 +84,13 @@ export class TinyLex {
    * Lexer scan method.
    */
   private _scan(): Token {
+    // If there are tokens in the cache return the leading one.
     if (this._tokens.length) { return this._tokens.shift() }
-    // Process input while there aren't any tokens and we
-    // haven't reached the end.
+
+    /**
+     * Process input while there aren't any tokens and we
+     * haven't reached the end.
+     */
     while(this._cursor < this._code.length) {
       const chunk = this._code.slice(this._cursor)
 
